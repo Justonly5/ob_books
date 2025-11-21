@@ -4,17 +4,17 @@
 
 根据 jvm 参数开头可以区分参数类型，共四类：“-”、“-X”、“-XX”，“-D”
 
-- [**标准参数**](https://zhida.zhihu.com/search?content_id=116431485&content_type=Article&match_order=1&q=%E6%A0%87%E5%87%86%E5%8F%82%E6%95%B0&zhida_source=entity)**（-）：所有的JVM实现都必须实现这些参数的功能，而且向后兼容，**我们可以通过 -help 命令来检索出所有标准参数。
+- [**标准参数**](https://zhida.zhihu.com/search?content_id=116431485&content_type=Article&match_order=1&q=%E6%A0%87%E5%87%86%E5%8F%82%E6%95%B0&zhida_source=entity)（-）：所有的JVM实现都必须实现这些参数的功能，而且向后兼容，我们可以通过 -help 命令来检索出所有标准参数。
 
 例子：-verbose:class，-verbose:gc，-verbose:jni
 
 关于这些命令的详细解释，可以参考官网：[java](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html)
 
-- **非标准参数（-X）：默认jvm实现这些参数的功能，但是并不保证所有jvm实现都满足，且不保证向后兼容；**我们可以通过 Java -X 命令来检索所有-X 参数。
+- **非标准参数（-X）：默认jvm实现这些参数的功能，但是并不保证所有jvm实现都满足，且不保证向后兼容；我们可以通过 Java -X 命令来检索所有-X 参数。
 
 例子：Xms20m，-Xmx20m，-Xmn20m，-Xss128k
 
-- **非Stable参数（-XX）：此类参数各个jvm实现会有所不同，将来可能会随时取消，需要慎重使用。**该参数的书写形式又分为两大类：
+- **非Stable参数（-XX）：此类参数各个jvm实现会有所不同，将来可能会随时取消，需要慎重使用。该参数的书写形式又分为两大类：
 
 ①、Boolean类型
 
