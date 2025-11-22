@@ -32,16 +32,18 @@
 
 **例如：**
 
-```
-	-Dfile.encoding=UTF-8 
- 	-Dlog.path=/data/kinyang/test/log/
-```
+
+```properties
+-Dfile.encoding=UTF-8 
+-Dlog.path=/data/kinyang/test/log/
+ ```
 
 **java -XX:+PrintFlagsInitial**：显示所有可设置参数及默认值，可结合 -XX:+PrintFlagsInitial 与-XX:+PrintFlagsFinal 对比设置前、设置后的差异，方便知道对那些参数做了调整。
 
 -XX:+**PrintCommandLineFlags**：**打印已经被用户或者当前虚拟机设置过的参数**
 
 ## 关键参数
+
 
 |   |   |
 |---|---|
