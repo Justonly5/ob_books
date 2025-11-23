@@ -24,11 +24,11 @@ MCP 遵循一个 client-server 架构，其中：
 ![[Pasted image 20251123214337.png]]
 
 ## MCP 数据格式
-在 MCP 中所有传输都使用 [JSON-RPC](https://www.jsonrpc.org/) 2.0 进行消息交换。
+	在 MCP 中所有传输都使用 [JSON-RPC](https://www.jsonrpc.org/) 2.0 进行消息交换。
 
 ## MCP 传输层
 
-传输层处理 clients 和 servers 之间的实际通信。MCP 支持多种传输机制：
+	传输层处理 clients 和 servers 之间的实际通信。MCP 支持多种传输机制：
 
 ### **Stdio 传输**
     - 使用标准输入/输出进行通信
@@ -47,3 +47,12 @@ MCP 遵循一个 client-server 架构，其中：
     - 使用服务器发送事件进行服务器到客户端的消息传递
     - 使用 HTTP POST 进行客户端到服务器的消息传递
 ### 流式传输
+
+	在 MCP 新标准(2025-03-26 版)中，MCP 引入了新的 Streamable HTTP  远程传输机制来代替之前的 HTTP+SSE 的远程传输模式。STDIO 的本地模式不变。
+
+	该新标准还在 OAuth2.1的授权框架、JSON-RPC 批处理、增强工具注解等方面进行增加和调整，且在 2025.05.08 号发布的 MCP SDK1.8.0 版本中正式支持了 Streamable HTTP。
+
+	HTTP+SSE 这种方式存在问题有:
+- 需要维护两个独立的连接端点
+- 有较高的连接可靠性要求。一旦 SSE 连接断开，Client 无法自动恢复，需要重新建立新连接，导致上下文丢失。
+- Server 必须为每个 Client 维持一个高可用长连接，对可用性和伸缩性提出挑战强制所有 Server 向 Client 的消息都经由 SSE 单向推送，缺乏灵活性。
