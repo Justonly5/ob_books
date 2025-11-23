@@ -26,15 +26,24 @@ MCP 遵循一个 client-server 架构，其中：
 ## MCP 数据格式
 在 MCP 中所有传输都使用 [JSON-RPC](https://www.jsonrpc.org/) 2.0 进行消息交换。
 
-### MCP 传输层
+## MCP 传输层
 
 传输层处理 clients 和 servers 之间的实际通信。MCP 支持多种传输机制：
 
-1. **Stdio 传输**
+### **Stdio 传输**
     - 使用标准输入/输出进行通信
     - 适用于本地进程
     MCP Client 通过启动一个子进程（MCP Server）并通过 stdin、stdout 的本地通信方式来交换 JSON 消息来实现通信。
-2. **通过 HTTP 的 SSE 传输**
+    详细描述如下:
+    1. 启动子进程(MCP Server)
+    MCP Client 以子进程形式启动 MCP Server，通过命令行指定 Server 的可执行文件及其参数
+    2. 消息交换
+	MCP Client 通过 stdin 向 MCP Server 写入 JSON-RPC 消息
+	MCP Server 处理请求后，通过 stdout 返回 JSON-RPC 消息，也可通过 stderr 输出日志
+	3. 生命周期管理
+	MCP Client 控制子进程 (MCP Server)的启动和关闭。通信结束后，MCP Client 关闭 stdin，终止 MCP Server
+###  SSE 传输
+	 20250326版本前。SSE(服务器发送事件)是基于 HTTP 协议的一种单向通信技术。
     - 使用服务器发送事件进行服务器到客户端的消息传递
     - 使用 HTTP POST 进行客户端到服务器的消息传递
-3. 流式传输
+### 流式传输
