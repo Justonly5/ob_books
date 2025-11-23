@@ -8,14 +8,33 @@
 
 ![[Pasted image 20251123213543.png]]
 
-## 通用架构
-![[Pasted image 20251123213901.png]]
-MCP 核心采用客户端-服务器架构，主机应用可以连接多个服务器：
+## MCP 通用架构
+MCP 遵循一个 client-server 架构，其中：
+- **Hosts** 是 LLM 应用（如 Claude Desktop 或 IDEs），它们发起连接。
+- **Clients** 在 host 应用中，与 servers 保持 1:1 的连接。
+- **Servers** 为 clients 提供上下文、tools 和 prompts。
+![[Pasted image 20251123215440.png]]
 
-- **MCP Hosts**: 发起请求的 LLM 应用程序，如 Claude Desktop、IDE 或 AI 工具。
-- **MCP Clients**: 在 host 内部，维护与 MCP Server 保持一对一连接的协议客户端。
-- **MCP Servers**: 轻量级程序，通过标准的 Model Context Protocol 为 MCP Client 提供上下文、工具和 prompt 信息。
+![[Pasted image 20251123213901.png]]
+
+
 - **本地资源**: MCP 服务器可安全访问的计算机文件、数据库和服务。
 - **远程资源**: MCP 服务器可连接远程外部系统（如通过 APIs）。
 
 ![[Pasted image 20251123214337.png]]
+
+## MCP 数据格式
+在 MCP 中所有传输都使用 [JSON-RPC](https://www.jsonrpc.org/) 2.0 进行消息交换。
+
+### MCP 传输层
+
+传输层处理 clients 和 servers 之间的实际通信。MCP 支持多种传输机制：
+
+1. **Stdio 传输**
+    - 使用标准输入/输出进行通信
+    - 适用于本地进程
+    MCP Client 通过启动一个子进程（MCP Server）并通过 stdin、stdout 的本地通信方式来交换 JSON 消息来实现通信。
+2. **通过 HTTP 的 SSE 传输**
+    - 使用服务器发送事件进行服务器到客户端的消息传递
+    - 使用 HTTP POST 进行客户端到服务器的消息传递
+3. 流式传输
