@@ -40,3 +40,33 @@ NWS_API_BASE = "https://api.weather.gov"
 USER_AGENT = "weather-app/1.0"
 ```
 
+### 实现工具执行
+```python
+@mcp.tool()
+async def get_alerts(state: str) -> str:
+    """获取指定州的天气警报（使用两字母州代码如CA/NY）"""
+    url = f"{NWS_API_BASE}/alerts/active/area/{state}"
+    data = await make_nws_request(url)
+
+    if not data or "features" not in data:
+        return "无法获取警报或未找到警报。"
+
+    if not data["features"]:
+        return "该州没有活动警报。"
+
+    alerts = [format_alert(feature) for feature in data["features"]]
+    return "\n---\n".join(alerts)
+```
+
+### 运行服务器
+```PYTHON
+if __name__ == "__main__":
+    # 初始化并运行服务器
+    mcp.run(transport='stdio')
+```
+
+```bash
+# 本地测试 debug 运行
+uv run mcp dev weather.py
+```
+![[Pasted image 20251128145449.png]]
