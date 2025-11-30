@@ -88,6 +88,21 @@ uv run mcp dev weather.py
 - Java 17 or higher installed.
 - [Spring Boot 3.3.x](https://docs.spring.io/spring-boot/installing.html) or higher
 
+### 创建项目
+通过 [Spring Initializer](https://start.spring.io/)
+```XML
+<dependencies>
+      <dependency>
+          <groupId>org.springframework.ai</groupId>
+          <artifactId>spring-ai-starter-mcp-server</artifactId>
+      </dependency>
+
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+      </dependency>
+</dependencies>
+```
 
 
 ```JSON
