@@ -1,6 +1,6 @@
 https://docs.spring.io/spring-ai/reference/api/mcp/mcp-server-boot-starter-docs.html
 https://modelcontextprotocol.io/docs/develop/build-server#java
-https://github.com/spring-projects/spring-ai-examples/tree/main/model-context-protocol
+https://github.com/spring-projects/spring-ai-examples/tree/main/model-context-protocol/weather
 
 # 服务端开发
 
