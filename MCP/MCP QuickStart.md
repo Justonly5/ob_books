@@ -89,7 +89,7 @@ uv run mcp dev weather.py
 - [Spring Boot 3.3.x](https://docs.spring.io/spring-boot/installing.html) or higher
 
 ### 创建项目
-通过 [Spring Initializer](https://start.spring.io/)
+通过 [Spring Initializer](https://start.spring.io/) 创建项目，并引入依赖：
 ```XML
 <dependencies>
       <dependency>
@@ -103,6 +103,83 @@ uv run mcp dev weather.py
       </dependency>
 </dependencies>
 ```
+
+STDIO 模式下必须禁用 banner、logging pattern
+```YAML
+# NOTE: You must disable the banner and the console logging 
+# to allow the STDIO transport to work !!!
+logging:
+  pattern:
+    console:
+spring:
+  main:
+    banner-mode: off
+```
+
+### 构建服务器
+```JAVA
+@SpringBootApplication
+public class McpServerApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(McpServerApplication.class, args);
+	}
+
+	@Bean
+	public ToolCallbackProvider weatherTools(WeatherService weatherService) {
+		return  MethodToolCallbackProvider.builder().toolObjects(weatherService).build();
+	}
+}
+```
+
+#### 实现工具执行
+```JAVA
+@Service
+public class WeatherService {
+
+	private final RestClient restClient;
+
+	public WeatherService() {
+		this.restClient = RestClient.builder()
+			.baseUrl("https://api.weather.gov")
+			.defaultHeader("Accept", "application/geo+json")
+			.defaultHeader("User-Agent", "WeatherApiClient/1.0 (your@email.com)")
+			.build();
+	}
+
+  @Tool(description = "Get weather forecast for a specific latitude/longitude")
+  public String getWeatherForecastByLocation(
+      double latitude,   // Latitude coordinate
+      double longitude   // Longitude coordinate
+  ) {
+      // Returns detailed forecast including:
+      // - Temperature and unit
+      // - Wind speed and direction
+      // - Detailed forecast description
+  }
+
+  @Tool(description = "Get weather alerts for a US state")
+  public String getAlerts(
+      @ToolParam(description = "Two-letter US state code (e.g. CA, NY)") String state
+  ) {
+      // Returns active alerts including:
+      // - Event type
+      // - Affected area
+      // - Severity
+      // - Description
+      // - Safety instructions
+  }
+
+  // ......
+}
+```
+
+#### 运行服务器
+```BASH
+mvn clean install
+```
+
+#### 测试
 
 
 ```JSON
