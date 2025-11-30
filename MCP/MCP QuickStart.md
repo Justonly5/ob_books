@@ -3,8 +3,9 @@ https://modelcontextprotocol.io/docs/develop/build-server#java
 https://github.com/spring-projects/spring-ai-examples/tree/main/model-context-protocol/weather
 
 # 服务端开发
+## Python
 
-## 环境准备
+### 环境准备
 - 安装Python 3.10或更高版本。
 - 您必须使用Python MCP SDK 1.2.0或更高版本。
 
@@ -12,7 +13,7 @@ https://github.com/spring-projects/spring-ai-examples/tree/main/model-context-pr
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-## 创建项目
+### 创建项目
 ```BASH
 # 为我们的项目创建一个新目录
 uv init weather
@@ -28,8 +29,8 @@ uv add "mcp[cli]" httpx
 # 创建我们的服务器文件
 touch weather.py
 ```
-## 构建服务器
-### 导入依赖包
+### 构建服务器
+#### 导入依赖包
 `weather.py`导入以下依赖：
 ```PYTHON
 from typing import Any
@@ -44,7 +45,7 @@ NWS_API_BASE = "https://api.weather.gov"
 USER_AGENT = "weather-app/1.0"
 ```
 
-### 实现工具执行
+#### 实现工具执行
 ```python
 @mcp.tool()
 async def get_alerts(state: str) -> str:
@@ -62,7 +63,7 @@ async def get_alerts(state: str) -> str:
     return "\n---\n".join(alerts)
 ```
 
-### 运行服务器
+#### 运行服务器
 ```PYTHON
 if __name__ == "__main__":
     # 初始化并运行服务器
@@ -76,3 +77,8 @@ uv run mcp dev weather.py
 ![[Pasted image 20251128145449.png]]
 
 
+## Java
+### 环境准备
+
+- Java 17 or higher installed.
+- [Spring Boot 3.3.x](https://docs.spring.io/spring-boot/installing.html) or higher
