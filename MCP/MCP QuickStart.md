@@ -1,3 +1,7 @@
+https://docs.spring.io/spring-ai/reference/api/mcp/mcp-server-boot-starter-docs.html
+https://modelcontextprotocol.io/docs/develop/build-server#java
+https://github.com/spring-projects/spring-ai-examples/tree/main/model-context-protocol
+
 # 服务端开发
 
 ## 环境准备
@@ -70,3 +74,5 @@ if __name__ == "__main__":
 uv run mcp dev weather.py
 ```
 ![[Pasted image 20251128145449.png]]
+
+
