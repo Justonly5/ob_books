@@ -160,8 +160,6 @@ https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md
 
 Skill 的核心是刚刚反复提到的 md 文件。这个 md 文件，如果纯手写，多少还是有些复杂的。所以官方也提供了一个 Skill 来帮我们创建 Skill。
 
-哈哈，套娃了。
-
 我现在使用的流程是，第一，先自己梳理一份自己的流程。用自然语言写就行。
 
 第二，基于这个流程，让 skill-creator 来生成一个最终的 SKILL。
