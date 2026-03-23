@@ -7,7 +7,7 @@
 
 1. 访问 [DeepSeek 官方平台](https://cloud.tencent.com/developer/tools/blog-entry?target=https%3A%2F%2Fplatform.deepseek.com%2F&objectId=2638806&objectType=1&contentType=markdown)，完成注册与账号验证；  
     
-2. 进入平台「API 密钥」模块，创建并获取 API Key，格式为 `sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`；  
+2. 进入平台「API 密钥」模块，创建并获取 API Key，格式为 `sk-xxxxxxxxxxxxxxxxxxxxx`；  
     
 3. 妥善保存 API Key，避免泄露（后续配置需直接使用）。
     
@@ -38,7 +38,6 @@ openclaw config set models.providers.deepseek '{
 ### 3.3 设置默认交互模型
 
 指定 `deepseek-chat` 为 OpenClaw 默认的智能交互模型，后续可根据需求切换：
-
 
 ```bash
 openclaw config set agents.defaults.model.primary "deepseek/deepseek-chat"
@@ -77,7 +76,6 @@ openclaw agent --session-id test --message "你好，请介绍一下你自己"
 
 确认默认模型与已配置模型列表是否正确：
 
-
 ```bash
 openclaw models status
 ```
@@ -87,7 +85,6 @@ openclaw models status
 #### 3.6.3 打开 Web 控制面板
 
 通过可视化面板管理 OpenClaw，命令执行后将自动在浏览器打开面板：
-
 
 ```bash
 openclaw dashboard
