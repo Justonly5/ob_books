@@ -19,3 +19,14 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 openclaw --version
 ```
 
+
+
+配置模型
+```BASH
+openclaw configure --section model
+```
+
+重启网关
+```bash
+openclaw gateway restart
+```
