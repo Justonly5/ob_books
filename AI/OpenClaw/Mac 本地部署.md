@@ -8,3 +8,14 @@ Node.js 22.0.0+(会自动安装)
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
+安装过程会自动：
+- 检测系统环境
+- 安装 Node.js（如果未安装）
+- 下载 OpenClaw
+- 配置环境变量
+## 验证安装
+
+```BASH
+openclaw --version
+```
+
