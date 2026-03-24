@@ -7,3 +7,4 @@ Node.js 22.0.0+(会自动安装)
 ```BASH
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
+
