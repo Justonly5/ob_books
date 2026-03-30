@@ -29,3 +29,7 @@ npx skills update
 https://skills.sh/
 
 ### find-skills
+
+```BASH
+npx skills add https://github.com/vercel-labs/skills --skill find-skills
+```
