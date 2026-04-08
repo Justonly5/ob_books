@@ -49,7 +49,7 @@ public class TraceFilter extends OncePerRequestFilter {
 ### 注册
 
 一般手动控制注册，通过 order 来控制执行顺序，order 值越小执行越靠前。
-> @Component 注解是没法直接注册 Filter 的。
+> @Component + @Order 注解是没法控制 Filter 的执行顺序，建议手动注册。
 #### FilterRegistrationBean
 
 ```JAVA
