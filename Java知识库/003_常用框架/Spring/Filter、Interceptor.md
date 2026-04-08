@@ -68,3 +68,46 @@ public FilterRegistrationBean<TraceFilter> myFilter() {
 @WebFilter(filterName = "myFilter", urlPatterns = "/*", order = 1)
 public class TraceFilter extends OncePerRequestFilter {}
 ```
+
+## Interceptor
+
+### 实现
+```JAVA
+public class AuthInterceptor implements HandlerInterceptor {
+    @Override
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) throws Exception {
+        String token = request.getHeader("Authorization");
+        if (token == null || !isValid(token)) {
+            response.setStatus(401);
+            return false;
+        }
+        return true;
+    }
+    private boolean isValid(String token) {
+        return true;
+    }
+}
+```
+
+### 注册
+
+>Filter：@Component 会自动注册（Spring Boot 帮你挂到 Servlet 容器）
+>Interceptor：@Component 不会生效，必须手动注册到 WebMvcConfigurer
+>此处的 pattern 不需要考虑 context-path，Spring 会自动处理。
+>**Interceptor 的路径匹配基于“去掉 context-path 后的路径”，所以 addPathPatterns 永远写相对路径即可。**
+
+```JAVA
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AuthInterceptor())
+                .addPathPatterns("/api/**").excludePatterns("/health");
+        registry.addInterceptor(new PermissionInterceptor())
+                .addPathPatterns("/api/**");
+    }
+}
+```
+
