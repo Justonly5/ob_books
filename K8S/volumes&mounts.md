@@ -94,3 +94,13 @@ volumeMounts:
 👉 容器能“看到变化”。
 
 ### subPath
+```YAML
+volumeMounts:
+  - name: config
+    mountPath: /app/application.yaml
+    subPath: application.yaml
+```
+
+👉 实际行为变成：把某一个文件 copy/bind mount 到容器指定路径。
+👉 **不再是目录级别的动态映射**。
+
