@@ -1,6 +1,8 @@
 
 ## 总结
-**volumes 定义“存储从哪里来”，volumeMounts 定义“挂到容器哪里去”。volumes 解决“数据从哪来”，volumeMounts 解决“数据到哪去”，两者通过 name 绑定。
+**volumes 定义“存储从哪里来”，volumes 解决“数据从哪来”。
+volumeMounts 定义“挂到容器哪里去”，volumeMounts 解决“数据到哪去”。
+两者通过 name 绑定。
 
 
 ```
@@ -90,7 +92,7 @@ volumeMounts:
 ```
 
 👉 K8s 实际做的是：/tmp/.../configMap -> 容器内 /config（软链接）
-当 ConfigMap 更新时：Kubelet 会替换底层文件（原子替换 symlink）
+当 ConfigMap 更新时：Kubectl 会替换底层文件（原子替换 symlink）
 👉 容器能“看到变化”。
 
 ### subPath
