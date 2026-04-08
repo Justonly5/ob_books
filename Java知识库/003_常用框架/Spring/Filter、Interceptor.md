@@ -48,6 +48,10 @@ public class TraceFilter extends OncePerRequestFilter {
 
 ### 注册
 
+一般手动控制注册，通过 order 来控制执行顺序，order 值越小执行越靠前。
+> @Component 注解是没法直接注册 Filter 的。
+#### FilterRegistrationBean
+
 ```JAVA
 @Bean
 public FilterRegistrationBean<TraceFilter> myFilter() {
@@ -56,6 +60,11 @@ public FilterRegistrationBean<TraceFilter> myFilter() {
     bean.UrlPattern("/*");
     bean.setOrder(1);
     return bean;
-
 }
+```
+
+#### @WebFilter
+```JAVA
+@WebFilter(filterName = "myFilter", urlPatterns = "/*", order = 1)
+public class TraceFilter extends OncePerRequestFilter {}
 ```
