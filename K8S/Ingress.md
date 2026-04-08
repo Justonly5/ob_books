@@ -10,6 +10,9 @@
 |---|---|
 |Ingress|配置文件|
 |Ingress Controller|Nginx / 网关程序|
+👉 **Ingress = 路由规则定义**
+
+👉 **Ingress Controller = 实际执行流量转发的网关**
 
 # **一、Ingress 是什么（定义规则）**
 **Ingress** 是一个 **Kubernetes API 对象（资源）**，本质上是一个**声明式的路由规则集合**，描述：
@@ -53,3 +56,27 @@ tls:
   - example.com
   secretName: tls-secret
 ```
+### **4️⃣ 统一入口**
+
+👉 替代多个 NodePort / LoadBalancer
+👉 提供一个统一的入口网关
+
+# IngressController
+## **工作原理**
+
+Ingress Controller 会：
+1. **监听 Kubernetes API（watch Ingress 资源）**
+2. **读取规则**
+3. **动态生成代理配置（如 Nginx / Envoy）**
+4. **接管外部流量并转发**
+5. 多个 controller 用 IngressClass 区分
+## **常见 Ingress Controller**
+
+### **1️⃣ NGINX Ingress（最常用）**
+
+- 基于 NGINX    
+- 社区版：kubernetes/ingress-nginx
+特点：
+- 成熟稳定
+- 功能丰富（rewrite、限流、认证等）
+- 最广泛使用
