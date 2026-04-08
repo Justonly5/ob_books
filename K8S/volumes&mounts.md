@@ -74,3 +74,23 @@ volumeMounts:
     subPath: config.yaml
 ```
 **⚠️ 4. 挂载会“覆盖”目录（非常容易踩坑）**
+
+`mountPath` 会覆盖整个目录。`mountPath` 当 ConfigMap 更新时，Kubelet 会替换底层文件（原子替换 symlink），👉 容器能“看到变化”。
+
+## mountPath&subPath
+> ❗ **使用 subPath 挂载 ConfigMap/Secret 时，配置更新不会热更新到容器**
+> ❗ 使用 mountPath 挂载时，配置会自动更新到容器内。
+
+### `mounthPath`
+
+```YAML
+volumeMounts:
+  - name: config
+    mountPath: /config
+```
+
+👉 K8s 实际做的是：/tmp/.../configMap -> 容器内 /config（软链接）
+当 ConfigMap 更新时：Kubelet 会替换底层文件（原子替换 symlink）
+👉 容器能“看到变化”。
+
+### subPath
