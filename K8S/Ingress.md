@@ -62,6 +62,8 @@ tls:
 👉 提供一个统一的入口网关
 
 # IngressController
+
+
 ## **工作原理**
 
 Ingress Controller 会：
@@ -80,3 +82,8 @@ Ingress Controller 会：
 - 成熟稳定
 - 功能丰富（rewrite、限流、认证等）
 - 最广泛使用
+
+
+IngressClass
+
+# Ingress 和 Con
