@@ -63,7 +63,8 @@ tls:
 
 # IngressController
 
-
+> --controller-class 通过这个指定自己的唯一身份 id
+> 推荐格式：`<domain>/<controller-name>`
 ## **工作原理**
 
 Ingress Controller 会：
@@ -71,7 +72,7 @@ Ingress Controller 会：
 2. **读取规则**
 3. **动态生成代理配置（如 Nginx / Envoy）**
 4. **接管外部流量并转发**
-5. 多个 controller 用 IngressClass 区分
+
 ## **常见 Ingress Controller**
 
 ### **1️⃣ NGINX Ingress（最常用）**
@@ -84,6 +85,85 @@ Ingress Controller 会：
 - 最广泛使用
 
 
-IngressClass
+# IngressClass
+> ✅ **IngressClass 是一个标准资源，用来标识“这条 Ingress 规则应该由哪一类 Controller 处理”**
 
-# Ingress 和 Con
+- 属于 networking.k8s.io/v1
+    
+- 是 **集群级资源（cluster-scoped）**
+    
+- 解决：**多 Ingress Controller 并存时的归属问题**
+
+## 资源结构
+```YAML
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  # 被 Ingress 引用
+  name: nginx
+  annotations:
+	# 默认类：没有指定 ingressClassName 的 Ingress → 自动归我
+    ingressclass.kubernetes.io/is-default-class: "true"  # 可选
+spec:
+  # 这个 class 属于哪种 controller 实现
+  controller: k8s.io/ingress-nginx
+  parameters:
+    apiGroup: k8s.example.com
+    kind: IngressParameters
+    name: nginx-params
+```
+# Ingress 和 Controller 绑定关系
+
+Ingress Controller 主动 watch Ingress → 根据规则筛选“我该处理哪些 Ingress”
+
+👉 **Ingress 通过 ingressClassName → IngressClass → controller 标识，与 Ingress Controller 建立“归属关系”**。
+👉 **本质是 Controller 侧筛选，而不是 Ingress 主动注册**。
+
+## IngressClass
+
+```TEXT
+Ingress
+  spec.ingressClassName = nginx
+        ↓
+IngressClass
+  metadata.name = nginx
+  spec.controller = k8s.io/ingress-nginx
+        ↓
+Ingress Controller
+  --controller-class=k8s.io/ingress-nginx
+```
+- Ingress 中指定 
+```YAML
+spec:
+  ingressClassName: nginx
+```
+- IngressClass 定义
+```YAML
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+spec:
+  controller: k8s.io/ingress-nginx
+```
+- Controller 启动参数
+Ingress Controller 启动时会声明自己是谁：
+```YAML
+args:
+  - --controller-class=k8s.io/ingress-nginx # 匹配 ingressClass 
+```
+
+## Annotation
+
+Ingress 设置 annotations:
+```YAML
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+```
+
+Controller 启动参数：
+```YAML
+args:
+  - --ingress-class=nginx # 匹配 annotations 的
+```
