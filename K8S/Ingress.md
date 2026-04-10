@@ -17,6 +17,8 @@
 # **一、Ingress 是什么（定义规则）**
 **Ingress** 是一个 **Kubernetes API 对象（资源）**，本质上是一个**声明式的路由规则集合**，描述：
 👉 “外部请求进来后，应该如何转发到集群内的 Service”。
+
+>  Ingress 不能跨 namespace 访问 Service。
 ## 示例
 ```YAML
 apiVersion: networking.k8s.io/v1
@@ -72,7 +74,10 @@ Ingress Controller 会：
 2. **读取规则**
 3. **动态生成代理配置（如 Nginx / Envoy）**
 4. **接管外部流量并转发**
-
+通过以下两个方式声明自身身份：
+- --ingress-class=nginx # 匹配 annotations 的
+- --controller-class=k8s.io/ingress-nginx 匹配 ingressClass
+>可以一起用，但**不建议这么做**。建立使用 --controller-class
 ## **常见 Ingress Controller**
 
 ### **1️⃣ NGINX Ingress（最常用）**
@@ -138,6 +143,7 @@ spec:
   ingressClassName: nginx
 ```
 - IngressClass 定义
+> ingressClass 没有 namespace
 ```YAML
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
@@ -166,4 +172,5 @@ Controller 启动参数：
 ```YAML
 args:
   - --ingress-class=nginx # 匹配 annotations 的
+  # - --watch-ingress-without-class=true   # 👈 关键 是否匹配 annotation 没有指定 ingress.class 的 ingress。
 ```
