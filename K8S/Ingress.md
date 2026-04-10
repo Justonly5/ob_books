@@ -172,5 +172,6 @@ Controller 启动参数：
 ```YAML
 args:
   - --ingress-class=nginx # 匹配 annotations 的
-  # - --watch-ingress-without-class=true   # 👈 关键 是否匹配 annotation 没有指定 ingress.class 的 ingress。
+  # - --watch-ingress-without-class=true   
+  # 👈 关键：是否匹配 annotation 没有指定 ingress.class 的 ingress。
 ```
