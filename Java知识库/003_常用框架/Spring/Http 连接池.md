@@ -32,7 +32,8 @@ public class HttpClientConfig {
         RequestConfig requestConfig = RequestConfig.custom()
             .setConnectTimeout(Timeout.ofSeconds(3))    // 建立连接超时
             .setResponseTimeout(Timeout.ofSeconds(5))   // 等待响应超时
-            .setConnectionRequestTimeout(Timeout.ofSeconds(2)) // 从池中获取连接超时
+            // 从池中获取连接超时
+            .setConnectionRequestTimeout(Timeout.ofSeconds(2)) 
             .build();
 
         return HttpClients.custom()
