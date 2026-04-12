@@ -24,3 +24,4 @@ codex exec
 # 升级  
 npm i -g @openai/codex@latest
 ```
+
