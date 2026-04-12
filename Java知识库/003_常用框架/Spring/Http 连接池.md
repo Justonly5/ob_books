@@ -1,4 +1,4 @@
-
+## 依赖
 ```XML
 <!-- HTTP 客户端 --> 
 <dependency>
@@ -15,7 +15,7 @@
 	<artifactId>micrometer-registry-prometheus</artifactId> 
 </dependency>
 ```
-
+## 配置
 ```JAVA
 @Configuration
 public class HttpClientConfig {
