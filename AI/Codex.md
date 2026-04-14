@@ -29,12 +29,14 @@ npm i -g @openai/codex@latest
 >https://developers.openai.com/codex/learn/best-practices
 
 
-### Context a nd prompts
+### Context a nd prompts --> AGENTS.md
 
 - **Goal:** What are you trying to change or build?
 - **Context:** Which files, folders, docs, examples, or errors matter for this task? You can @ mention certain files as context.
 - **Constraints:** What standards, architecture, safety requirements, or conventions should Codex follow?
 - **Done when:** What should be true before the task is complete, such as tests passing, behavior changing, or a bug no longer reproducing?
 
+### Plan first for difficult tasks --> PLANS.md
 
+/plan PLANS.md
 ## oh-my-codex
