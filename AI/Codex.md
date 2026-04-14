@@ -25,7 +25,16 @@ codex exec
 npm i -g @openai/codex@latest
 ```
 
+## best-practice
+>https://developers.openai.com/codex/learn/best-practices
 
+
+### Context a nd prompts
+
+- **Goal:** What are you trying to change or build?
+- **Context:** Which files, folders, docs, examples, or errors matter for this task? You can @ mention certain files as context.
+- **Constraints:** What standards, architecture, safety requirements, or conventions should Codex follow?
+- **Done when:** What should be true before the task is complete, such as tests passing, behavior changing, or a bug no longer reproducing?
 
 
 ## oh-my-codex
