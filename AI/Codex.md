@@ -27,3 +27,5 @@ npm i -g @openai/codex@latest
 
 
 
+
+## oh-my-codex
