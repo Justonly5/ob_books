@@ -39,4 +39,4 @@ npm i -g @openai/codex@latest
 ### Plan first for difficult tasks --> PLANS.md
 
 /plan PLANS.md
-## oh-my-codex
+
