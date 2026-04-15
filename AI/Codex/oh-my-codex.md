@@ -48,3 +48,19 @@ Results: 9 passed, 0 warnings, 0 failed
 ```
 ## 使用
 
+
+
+## 使用场景
+
+| 场景                      | 推荐做法                                      |
+| :---------------------- | :---------------------------------------- |
+| 功能需求不清晰，想先澄清边界          | `$deep-interview "..."`                   |
+| 需求清晰，想在实现前制定计划和权衡       | `$ralplan "..."`                          |
+| 大型功能开发，多个子任务可并行         | `$team N:executor "..."`                  |
+| 一个任务需要持续推进直到完成/验证通过     | `$ralph "..."`                            |
+| 从零构建一个新功能/应用            | `$autopilot "build me ..."`               |
+| 代码审查                    | `$code-review`                            |
+| 安全审计                    | `$security-review`                        |
+| 修复 TypeScript 类型错误或构建失败 | `$build-fix`                              |
+| 自动化研究/优化任务              | `omx autoresearch missions/<mission-dir>` |
+| 只需查看仓库结构，不需要编辑          | `omx explore --prompt "..."`              |
