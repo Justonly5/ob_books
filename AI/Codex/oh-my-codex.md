@@ -64,3 +64,5 @@ Results: 9 passed, 0 warnings, 0 failed
 | 修复 TypeScript 类型错误或构建失败 | `$build-fix`                              |
 | 自动化研究/优化任务              | `omx autoresearch missions/<mission-dir>` |
 | 只需查看仓库结构，不需要编辑          | `omx explore --prompt "..."`              |
+
+## 案例
