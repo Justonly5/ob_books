@@ -134,6 +134,8 @@ helm install test-myapp ./myapp -n namespace1
 helm update --install test-myapp ./myapp -n namespace1
 ```
 
+👉 **Helm 的 install 只能创建新 release，不能覆盖已有 release；更新必须用 upgrade，生产推荐用 upgrade --install**。如果不存在 → install，如果存在   → upgrade。
+
 这里：
 
 - test-myapp 是 release 名称
