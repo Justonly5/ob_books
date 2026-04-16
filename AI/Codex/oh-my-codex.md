@@ -66,3 +66,6 @@ Results: 9 passed, 0 warnings, 0 failed
 | 只需查看仓库结构，不需要编辑          | `omx explore --prompt "..."`              |
 
 ## 案例
+
+我看了下 你现在整理的那个 deploy 的文件 有几个问题确认下：
+1. service/cm、ingress yaml 文件里是没有配置 namespace
