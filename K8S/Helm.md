@@ -138,6 +138,58 @@ helm install test-myapp ./myapp -n namespace1
 - -n namespace1 是命名空间
 
 ### 查看资源
-```BASH
 
+```BASH
+kubectl get deploy,svc,cm -n namespace1
+```
+
+### 更新部署
+
+```BASH
+helm upgrade test-myapp ./myapp -n namespace1
+```
+
+### 删除
+
+```BASH
+helm uninstall test-myapp -n namespace1
+```
+
+### 按环境部署
+
+values 文件可以按环境区分，例如：
+
+```
+values-dev.yaml
+values-prod.yaml
+```
+
+```BASH
+helm install test-myapp ./myapp -n default -f values-dev.yaml
+
+helm upgrade test-myapp ./myapp -n default -f values-dev.yaml
+```
+
+### 常用调试命令
+
+#### 看 release 列表
+
+```BASH
+helm list -n default
+```
+#### 看渲染结果
+
+```BASH
+helm get manifest test-myapp -n default
+```
+
+#### 看values
+
+```BASH
+helm get values test-myapp -n default
+```
+#### 看状态
+
+```BASH
+helm status test-myapp -n default
 ```
