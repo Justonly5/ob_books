@@ -129,6 +129,11 @@ helm template test-myapp ./myapp
 helm install test-myapp ./myapp -n namespace1
 ```
 
+或者直接使用 
+```BASH
+helm update --install test-myapp ./myapp -n namespace1
+```
+
 这里：
 
 - test-myapp 是 release 名称
