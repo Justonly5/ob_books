@@ -1,9 +1,65 @@
+Spring Boot 读取 Logback 配置有几种方式，按优先级从高到低：
+
+## 自动加载顺序
+
+Spring Boot 启动时按这个顺序查找配置文件，找到第一个就停止：
+
+```
+logback-spring.xml      ← 推荐用这个
+logback.xml
+logback-spring.groovy
+logback.groovy
+```
+
+放在 `src/main/resources/` 下即可，不需要任何额外配置。
+
+**推荐用 `logback-spring.xml` 而不是 `logback.xml`** 的原因是：`logback-spring.xml` 由 Spring Boot 解析，可以用 `<springProfile>` 和 `<springProperty>` 标签；`logback.xml` 由 Logback 直接解析，这两个标签不可用。
+
+也可以在 yml 里指定路径
+
+```yaml
+logging:
+  config: classpath:config/my-logback.xml  # 自定义文件名或路径
+```
+
+## Property
+
+### 配置
+
+```XML
+<!-- 加载外部文件，里面的 key 直接当变量用 --> 
+<property file="src/main/resources/logback.properties"/>
+
+<!--logback-spring.xml 支持 springProperty, 从 application.yml 读取 -->
+<springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="app"/>
+```
+
+
+### 读取
+
+property 有三种 scope，默认为 local。
+
+| scope       | xml 内可用        | 代码读取方式                        |
+| ----------- | -------------- | ----------------------------- |
+| `local`（默认） | 仅定义它的 xml 块内   | 无法读取                          |
+| `context`   | 整个 logback 上下文 | `LoggerContext.getProperty()` |
+| `system`    | 整个 JVM         | `System.getProperty()`        |
+`local` 的作用域仅限于**当前 xml 文件的解析过程**，解析完就丢弃。
+`context` 会把值存进 `LoggerContext` 对象，整个应用生命周期都在，可以在代码里读取。
+
+```JAVA
+// 1. 从 LoggerContext 读取 logback property 
+LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory(); String logHome = context.getProperty("LOG_HOME"); 
+String logName = context.getProperty("LOG_NAME");
+```
 ## 完整 logback-spring.xml 最佳实践
+
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
-
+   
+    <!-- 必须是 logback-spring.xml 才支持 springProperty -->
     <!-- 从 application.yml 读取 -->
     <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="app"/>
     <springProperty scope="context" name="LOG_HOME" source="logging.file.path" defaultValue="/var/log"/>
@@ -36,8 +92,8 @@
                 ${LOG_HOME}/${APP_NAME}-${POD_NAME}.%d{yyyy-MM-dd}.%i.log.gz
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
-            <maxHistory>7</maxHistory>
-            <totalSizeCap>10GB</totalSizeCap>
+            <maxHistory>7</maxHistory><!-- 保留 7 天 -->
+            <totalSizeCap>10GB</totalSizeCap><!-- 总大小上限 -->
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
         <encoder>
