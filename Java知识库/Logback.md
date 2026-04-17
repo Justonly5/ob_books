@@ -151,7 +151,8 @@ String logName = context.getProperty("LOG_NAME");
     </appender>
 
     <!-- 异步错误文件 -->
-    <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="ASYNC_ERROR_FILE"
+        class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="ERROR_FILE"/>
         <queueSize>256</queueSize>
         <discardingThreshold>0</discardingThreshold>
@@ -210,15 +211,13 @@ String logName = context.getProperty("LOG_NAME");
 
 **`neverBlock` 和 `discardingThreshold` 的取舍：**
 
-```
 日志不能丢（金融/审计）：
-  discardingThreshold=0，neverBlock=false
-  → 队列满时业务线程阻塞等待，日志不丢但可能影响响应时间
+
+discardingThreshold=0，neverBlock=false → 队列满时业务线程阻塞等待，日志不丢但可能影响响应时间
 
 日志可以丢（普通业务）：
-  discardingThreshold=20，neverBlock=true
-  → 队列满时直接丢弃，业务线程不受影响
-```
+
+discardingThreshold=20，neverBlock=true  → 队列满时直接丢弃，业务线程不受影响
 
 ---
 
