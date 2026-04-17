@@ -73,7 +73,16 @@ management:
 - Actuator 和业务接口在**同一个 application context**
 - 也在**同一个 Web 服务器实例**里处理请求。
 
+业务代码里的 `Filter`、`Interceptor` 会对所有的接口起作用。
 
+开启独立端口时：
+
+- management.server.port 不同于 server.port
+- 会创建**单独的 management context**
+- 这个 management context 是主应用 context 的**child context**
+- 对 servlet 应用来说，会有**单独的 Web server** 在管理端口监听
+
+> 对于开启了独立端口，如果有需要使用 filter、interceptor 务必需要确认是否生效，不能默认是生效的！！！
 ## Health 
 
 ### 机制
@@ -185,6 +194,8 @@ Spring Boot Actuator 里专门给 K8s probe 用的配置。
 因为官方也提醒过：如果 probe 只打管理端口，可能 actuator 正常，但主业务端口其实已经不行了。
 
 ## Tips
+
+### 相同 uri
 
 Actuator 的接口和 `@RequestMapping` 配置的 controller 接口是不一样的，因为 Actuator 用的是单独的 HandlerMapping。假设两个接口 uri 相同，那在**同一个端口**上就会有路径冲突。这种冲突和普通两个 @RequestMapping("/health") 不完全一样，**不一定是启动直接报错**，实际效果可能是：
 - 某一个接口把另一个“遮住”
