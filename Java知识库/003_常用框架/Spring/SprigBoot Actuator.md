@@ -63,6 +63,17 @@ management:
       enabled: true
 
 ```
+## port
+
+当 actuator 开启独立端口后，
+
+不开启独立端口时：
+
+- management.server.port 和 server.port 相同
+- Actuator 和业务接口在**同一个 application context**
+- 也在**同一个 Web 服务器实例**里处理请求。
+
+
 ## Health 
 
 ### 机制
