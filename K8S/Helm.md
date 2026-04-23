@@ -194,7 +194,7 @@ helm list -n default
 helm get manifest test-myapp -n default
 ```
 
-#### 看values
+#### 看 values
 
 ```BASH
 helm get values test-myapp -n default
