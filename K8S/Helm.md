@@ -119,11 +119,15 @@ spec:
 ### 测试模板
 
 ```BASH
-helm template test-myapp ./myapp
+helm template test-myapp ./myapp  -n  default
 ```
 
 这一步不会真正部署，只会把最终 YAML 打印出来。
+
+
 ### 正式安装
+
+====**必须指定namespace，不然该 release 也不是在 value 里的 namespace 下**。
 
 ```BASH
 helm install test-myapp ./myapp -n namespace1
