@@ -33,3 +33,8 @@ https://skills.sh/
 ```BASH
 npx skills add https://github.com/vercel-labs/skills --skill find-skills
 ```
+
+
+[EverythingClaudeCode](https://github.com/affaan-m/everything-claude-code/blob/main/README.zh-CN.md)
+
+[AwesomeClaudCode](https://github.com/hesreallyhim/awesome-claude-code)
