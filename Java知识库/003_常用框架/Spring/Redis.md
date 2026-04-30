@@ -76,6 +76,16 @@ public class RedisConfig {
     }
 
     // ══════════════════════════════════════════════
+    // 节点宕机期间主库选举时，读请求可以降级到 Replica
+    // ══════════════════════════════════════════════
+	@Bean 
+	public LettuceClientConfigurationBuilderCustomizer customizer() { 
+		return builder -> builder.readFrom(ReadFrom.REPLICA_PREFERRED); 
+		// MASTER 只读主（默认） 
+		// REPLICA_PREFERRED 优先读从，从不可用时读主 
+		// NEAREST 读延迟最低的节点 
+	}
+    // ══════════════════════════════════════════════
     // ConnectionFactory：根据配置自动选择模式
     // ══════════════════════════════════════════════
 
@@ -320,3 +330,72 @@ public class RedisClusterService {
 
 # 注意点
 ## 连接池连接清理策略
+
+### 连接池在节点宕机时的行为
+
+```
+Redis Cluster
+  ├── Master 1 (正常)
+  ├── Master 2 (宕机) ← 连接池里有指向它的连接
+  └── Master 3 (正常)
+
+连接池里已有的连接：
+  ├── 指向 Master 1 的连接  → 正常可用
+  ├── 指向 Master 2 的连接  → 已死，但连接池不知道
+  └── 指向 Master 3 的连接  → 正常可用
+```
+
+连接池里指向宕机节点的连接**不会立即失效**，只有在下次使用这条连接时才会发现它已经断了，然后抛出异常。
+### 三个关键机制
+
+#### ① 拓扑刷新（路由层）
+
+这是最重要的，`adaptive: true` 开启后：
+
+```
+节点宕机
+  → 集群内部选举新 Master（通常 10-30s）
+  → Lettuce 收到 MOVED 错误
+  → 触发拓扑刷新，更新路由表
+  → 新请求自动路由到新 Master
+```
+
+但注意：**拓扑刷新只影响新请求的路由，不会主动清理连接池里的旧连接。**
+
+#### ② 连接池的旧连接处理
+
+旧连接被取出使用时，会出现两种情况：
+
+```
+取出指向宕机节点的连接
+  ├── 执行命令 → 抛出 RedisConnectionException
+  │     → Lettuce 重试（如果开启重试）
+  │     → 连接标记为失效，从池中移除
+  │     → 重建新连接指向新 Master
+  └── 连接在池中空闲 → 依赖 validationQuery 或 maxIdleTime 来淘汰
+```
+
+#### ③ 空闲连接的主动淘汰
+需要配置 `testWhileIdle` 来定期检测空闲连接是否还活着：
+```YAML
+# 这两个参数是关键，默认没有开启 
+time-between-eviction-runs: 30s 
+# 每 30s 检测一次空闲连接 
+min-evictable-idle-time: 60s # 空闲超过 60s 的连接驱逐
+```
+
+### 节点宕机后的完整时序
+
+```
+t=0s    Master 2 宕机
+t=0~30s 集群内部哨兵选举新 Master（期间该分片不可用）
+t=30s   新 Master 选举完成
+t=30s   业务请求打到旧连接 → MOVED 错误
+t=30s   adaptive refresh 触发 → 路由表更新
+t=30s   旧连接标记失效移除 → 重建新连接
+t=31s   后续请求正常路由到新 Master
+
+期间影响：
+  - 选举过程中（0~30s）该分片的写请求会失败
+  - 读请求如果配置了 readFrom=REPLICA 则部分可用
+```
