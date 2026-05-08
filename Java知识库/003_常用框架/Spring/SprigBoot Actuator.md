@@ -172,7 +172,7 @@ Spring Boot Actuator 里专门给 K8s probe 用的配置。
 - 显式写成 true 的好处是：行为更明确，非 K8s 环境本地调试也能直接访问
 
 `management.endpoint.health.probes.add-additional-paths=true`  
-意思是：除了 actuator 路径外，再额外在主业务端口暴露更适合 K8s 的探针路径。
+意思是：除了 actuator 路径外，再额外在==主业务端口==暴露更适合 K8s 的探针路径。
 
 开启后通常会额外出现：
 
