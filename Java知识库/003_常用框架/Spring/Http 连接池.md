@@ -16,6 +16,9 @@
 </dependency>
 ```
 ## 配置
+
+### HttpClient
+
 ```JAVA
 @Configuration
 public class HttpClientConfig {
@@ -50,6 +53,55 @@ public class HttpClientConfig {
     public RestTemplate restTemplate(CloseableHttpClient httpClient) {
         HttpComponentsClientHttpRequestFactory factory =
             new HttpComponentsClientHttpRequestFactory(httpClient);
+        return new RestTemplate(factory);
+    }
+}
+```
+
+### OkHttpClient
+
+```JAVA
+@Configuration
+public class OkHttpConfig {
+
+    @Bean
+    public OkHttpClient okHttpClient() {
+        return new OkHttpClient.Builder()
+            // 连接池
+            .connectionPool(new ConnectionPool(
+                50,              // 最大空闲连接数
+                5,               // 空闲连接存活时间
+                TimeUnit.MINUTES
+            ))
+            // 超时
+            .connectTimeout(3, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.SECONDS)
+            .writeTimeout(5, TimeUnit.SECONDS)
+            // 自动重试（默认开启，可关闭）
+            .retryOnConnectionFailure(true)
+            // 拦截器：日志 + traceId
+            .addInterceptor(chain -> {
+                Request request = chain.request().newBuilder()
+                    .addHeader("X-Trace-Id",
+                        MDC.get("traceId") != null
+                            ? MDC.get("traceId") : "")
+                    .build();
+                // 打印请求耗时
+                long start = System.currentTimeMillis();
+                Response response = chain.proceed(request);
+                long duration = System.currentTimeMillis() - start;
+                log.info("HTTP {} {} → {} ({}ms)",
+                    request.method(), request.url(),
+                    response.code(), duration);
+                return response;
+            })
+            .build();
+    }
+
+    @Bean
+    public RestTemplate restTemplate(OkHttpClient okHttpClient) {
+        OkHttp3ClientHttpRequestFactory factory =
+            new OkHttp3ClientHttpRequestFactory(okHttpClient);
         return new RestTemplate(factory);
     }
 }
