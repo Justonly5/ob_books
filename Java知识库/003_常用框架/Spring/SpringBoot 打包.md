@@ -41,7 +41,7 @@ Resource resource = resourceLoader.getResource("classpath:/data/init.sql");
 
 ### 二、loader.path
 
-`loader.path` 是 Spring Boot 的概念，不是标准 JVM 参数。它只在用 `PropertiesLauncher` 启动时生效，作用是把 fat jar 外部的目录或 jar 追加到 classpath，实现运行时动态扩展。
+`loader.path` 是 Spring Boot 的概念，不是标准 JVM 参数。它只在用 ==`PropertiesLauncher`== 启动时生效，作用是把  jar 外部的目录或 jar 追加到 classpath，实现运行时动态扩展。
 
 默认的 `JarLauncher` 不支持 `loader.path`，必须切换启动器：
 
@@ -127,7 +127,6 @@ java -jar app.jar \
 ---
 
 ### 三者对比总结
-
 
 |         | classpath         | loader.path            | spring.config.location\| |
 | ------- | ----------------- | ---------------------- | ------------------------ |
@@ -280,7 +279,6 @@ target/deploy/
 
 `loader.path` 只对 `PropertiesLauncher` 生效，但这个项目：
 
-xml
 
 ```xml
 <!-- 跳过了 spring-boot-maven-plugin 的 repackage -->
@@ -307,8 +305,7 @@ bash
 
 ```bash
 # 不需要 loader.path，Class-Path 已经在 MANIFEST 里写死了 extlib/
-java -jar lib/app.jar \
-     --spring.config.location=file:conf/
+java -jar lib/app.jar --spring.config.location=file:conf/
 ```
 
 ---
@@ -331,8 +328,6 @@ Logback 的加载机制：
 
 要让外部的 `logback-spring.xml` 生效，需要单独指定：
 
-bash
-
 ```bash
 java -jar lib/app.jar \
      --spring.config.location=file:conf/ \
@@ -341,7 +336,7 @@ java -jar lib/app.jar \
 
 或者在 `application.yml` 里配置：
 
-yaml
+
 
 ```yaml
 logging:
@@ -363,7 +358,6 @@ mybatis:
 
 如果 mapper xml 已经打进了 jar 内（没有被 `excludes` 排除），那就没问题。看这个打包配置：
 
-xml
 
 ```xml
 <excludes>
@@ -380,7 +374,6 @@ mapper xml 没有被排除，所以它还在 jar 内的 classpath 里，`classpa
 
 ### 完整正确的启动命令
 
-bash
 
 ```bash
 java -jar lib/app.jar \
@@ -399,31 +392,19 @@ java -jar lib/app.jar \
 |`mapper/*.xml`|jar 内 classpath|`classpath:/mapper/*.xml`|否，已在 classpath|
 |依赖 jar|`extlib/`|MANIFEST Class-Path 自动加载|否，MANIFEST 已写死|
 
-
 
-
 
-## You said: 如果增加这个配置呢 classPath 会包含了 conf 目录吗
-
-```
+```xml
 <manifestEntries>
     <Class-Path>../conf</Class-Path>
 </manifestEntries>
 ```
 
-如果增加这个配置呢 classPath 会包含了 conf 目录吗
-
-6月5日
-
-
-
-
-
-## Claude responded: 是的，加了这个配置之后 conf/ 目录会被追加到 classpath。
+如果增加这个配置呢 classPath 会包含了 conf 目录吗？
 
 是的，加了这个配置之后 `conf/` 目录会被追加到 classpath。
 
-### 追加后的 MANIFEST.MF 内容
+追加后的 MANIFEST.MF 内容
 
 ```
 Main-Class: com.dataacc.management.OrchestrationApplication
@@ -449,7 +430,6 @@ conf/ 已在 classpath
 
 **mapper xml — 取决于 mapper-locations 配置**
 
-yaml
 
 ```yaml
 # 如果配置的是 classpath:/mapper/*.xml
@@ -474,9 +454,6 @@ target/deploy/
   conf/              ← ../conf 从 lib/ 往上一级再进 conf/，路径正确
 ```
 
-启动时必须在 `lib/` 目录下执行，或者使用绝对路径，否则相对路径解析会出错：
-
-bash
 
 ```bash
 # 正确：在 deploy/ 目录下执行
@@ -630,13 +607,8 @@ exec java $JVM_OPTS \
 
 loader.path 如果想起作用应该怎么调整打包方式
 
-6月5日
 
-
-
-
-
-## Claude responded: 需要让 spring-boot-maven-plugin 的 repackage 生效，并指定使用 PropertiesLauncher。
+## 需要让 spring-boot-maven-plugin 的 repackage 生效，并指定使用 PropertiesLauncher。
 
 需要让 `spring-boot-maven-plugin` 的 repackage 生效，并指定使用 `PropertiesLauncher`。
 
