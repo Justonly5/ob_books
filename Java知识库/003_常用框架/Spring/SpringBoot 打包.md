@@ -151,7 +151,7 @@ java -Dloader.path=/app/ext \
 
 `spring.config.location` 指向的路径下的配置文件会自动进入 classpath 吗？不会。这是最常见的误解——它只是告诉 Spring 去哪里读配置文件，读完之后配置内容进入 `Environment`，但那个目录本身不会被加入 classpath，你无法用 `classpath:` 前缀访问那里的其他资源。
 
-
+## 打包示例分析
 
 ```XML
 <plugins>  
@@ -166,7 +166,10 @@ java -Dloader.path=/app/ext \
     </plugin>  
   
     <!--  
-        Thin jar：          - 输出到 target/deploy/lib/          - MANIFEST 设置 Main-Class 和 Class-Path（extlib/ 前缀，与依赖目录对应）          - 环境相关配置文件不打入 jar，由外部 conf/ 目录提供    -->    
+        Thin jar：          
+        - 输出到 target/deploy/lib/          
+        - MANIFEST 设置 Main-Class 和 Class-Path（extlib/ 前缀，与依赖目录对应）              - 环境相关配置文件不打入 jar，由外部 conf/ 目录提供    
+    -->    
     <plugin>  
         <groupId>org.apache.maven.plugins</groupId>  
         <artifactId>maven-jar-plugin</artifactId>  
@@ -190,13 +193,18 @@ java -Dloader.path=/app/ext \
     </plugin>  
   
     <!--  
-        拷贝运行时依赖到 target/deploy/lib/extlib/        includeScope=runtime 涵盖 compile + runtime，排除 test    -->    <plugin>  
+        拷贝运行时依赖到 target/deploy/lib/extlib/        
+        includeScope=runtime 涵盖 compile + runtime，排除 test    
+    -->    
+        <plugin>  
         <groupId>org.apache.maven.plugins</groupId>  
         <artifactId>maven-dependency-plugin</artifactId>  
-        <executions>            <execution>  
+        <executions>            
+	        <execution>  
                 <id>copy-dependencies</id>  
                 <phase>package</phase>  
-                <goals>                    <goal>copy-dependencies</goal>  
+                <goals>
+                <goal>copy-dependencies</goal>  
                 </goals>  
                 <configuration>                    <outputDirectory>${project.build.directory}/deploy/lib/extlib</outputDirectory>  
                     <includeScope>runtime</includeScope>  
@@ -209,20 +217,24 @@ java -Dloader.path=/app/ext \
     <!--  
         拷贝配置文件到 target/deploy/conf/        
         db/migration SQL 保留在 jar 内供 Flyway 加载，不在此处复制    
-        -->    
+    -->    
         <plugin>  
         <groupId>org.apache.maven.plugins</groupId>  
         <artifactId>maven-resources-plugin</artifactId>  
-        <executions>            <execution>  
+        <executions>            
+	        <execution>  
                 <id>copy-config</id>  
                 <phase>package</phase>  
-                <goals>                    <goal>copy-resources</goal>  
+                <goals>                    
+	                <goal>copy-resources</goal>  
                 </goals>  
                 <configuration>                    <outputDirectory>${project.build.directory}/deploy/conf</outputDirectory>  
-                    <resources>                        <resource>  
+                    <resources>                        
+	                    <resource>  
                             <directory>src/main/resources</directory>  
                             <filtering>false</filtering>  
-                            <includes>                                <include>application*.yml</include>  
+                            <includes>
+	                            <include>application*.yml</include>  
                                 <include>application*.yaml</include>  
                                 <include>logback-spring.xml</include>  
                             </includes>  
@@ -234,17 +246,21 @@ java -Dloader.path=/app/ext \
     </plugin>  
   
     <!--  
-        跳过 spring-boot 的 fat jar 重打包；        可执行入口由 maven-jar-plugin 的 MANIFEST Main-Class 承担    -->    <plugin>  
+        跳过 spring-boot 的 fat jar 重打包；        
+        可执行入口由 maven-jar-plugin 的 MANIFEST Main-Class 承担    
+    -->    
+    <plugin>  
         <groupId>org.springframework.boot</groupId>  
         <artifactId>spring-boot-maven-plugin</artifactId>  
-        <configuration>            <skip>true</skip>  
+        <configuration>            
+        <skip>true</skip>  
         </configuration>  
     </plugin>  
 </plugins>
 ```
 
 
-### 先看打包结构
+
 
 ```
 target/deploy/
