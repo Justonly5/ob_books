@@ -473,7 +473,7 @@ java -jar /app/lib/app.jar \
 
 ### 加了 manifestEntries 后的完整启动命令
 
-bash
+
 
 ```bash
 java -jar lib/app.jar \
@@ -482,19 +482,11 @@ java -jar lib/app.jar \
 
 `--logging.config` 不再需要，`logback-spring.xml` 会通过 classpath 自动加载。
 
-
-
-
-
 ## You said: 最终目录结构为 bin/start.
 
 最终目录结构为 bin/start.sh ，lib/ ，conf/ 三个目录。 start.sh 会在当前目录下执行 java -jar lib/app.jar -Dload.path=.,conf,lib/extlib 这样有问题吗
 
-6月5日
 
-
-
-
 
 ## Claude responded: 有几个问题，逐一分析。
 
@@ -502,7 +494,6 @@ java -jar lib/app.jar \
 
 ### 问题一：`-D` 参数位置错误
 
-bash
 
 ```bash
 # 错误写法：-D 参数放在 jar 后面，会被当成程序参数而不是 JVM 参数
@@ -536,7 +527,6 @@ deploy/
 
 `start.sh` 从 `bin/` 执行时：
 
-bash
 
 ```bash
 # lib/app.jar 相对 bin/ 找不到
@@ -545,7 +535,6 @@ java -jar lib/app.jar   # 报错：找不到 lib/app.jar
 
 ### 正确的 start.sh 写法
 
-bash
 
 ```bash
 #!/bin/bash
@@ -579,7 +568,6 @@ lib/app.jar 位置 → lib/
 
 ### 最终建议的 start.sh
 
-bash
 
 ```bash
 #!/bin/bash
@@ -599,14 +587,6 @@ exec java $JVM_OPTS \
 
 用 `exec` 替换当前 shell 进程，让 java 进程直接成为 PID 1（或 tini 的子进程），保证 K8s 优雅停机信号能正确传递，这也是之前讨论过的最佳实践。
 
-
-
-
-
-## You said: loader.
-
-loader.path 如果想起作用应该怎么调整打包方式
-
 
 ## 需要让 spring-boot-maven-plugin 的 repackage 生效，并指定使用 PropertiesLauncher。
 
@@ -614,7 +594,6 @@ loader.path 如果想起作用应该怎么调整打包方式
 
 ### 调整打包配置
 
-xml
 
 ```xml
 <build>
@@ -766,7 +745,6 @@ Start-Class: com.dataacc.management.OrchestrationApplication
 
 ### 对应的 start.sh
 
-bash
 
 ```bash
 #!/bin/bash
@@ -798,21 +776,13 @@ exec java $JVM_OPTS \
 
 你们当前用的 MANIFEST Class-Path 方案其实已经够用，`loader.path` 的主要优势是运行时灵活指定路径，如果部署目录结构是固定的，没有必要切换。
 
-
 
-
 
-## You said: 要 repackage 这个怎么说 是不能直接 mvn package 打吧吗
+##  repackage 
 
 要 repackage 这个怎么说 是不能直接 mvn package 打吧吗
 
-6月5日
-
-
-
-
-
-## Claude responded: 可以直接 mvn package，repackage 是 spring-boot-maven-plugin 的一个 goal，它绑定在 package 阶段自动执行，不需要单独调用。
+可以直接 mvn package，repackage 是 spring-boot-maven-plugin 的一个 goal，它绑定在 package 阶段自动执行，不需要单独调用。
 
 可以直接 `mvn package`，`repackage` 是 `spring-boot-maven-plugin` 的一个 goal，它绑定在 `package` 阶段自动执行，不需要单独调用。
 
@@ -834,7 +804,6 @@ mvn package
 
 ### 之前 skip=true 的作用
 
-xml
 
 ```xml
 <plugin>
@@ -856,7 +825,6 @@ xml
 
 打包完成后检查 jar 内的 MANIFEST：
 
-bash
 
 ```bash
 # 查看 MANIFEST 内容
@@ -882,27 +850,14 @@ Main-Class: com.dataacc.management.OrchestrationApplication
 Class-Path: extlib/spring-boot.jar extlib/...
 ```
 
-
 
-
 
-## You said: 怎么验证下当前的 classPath 以及下的文件
-
-怎么验证下当前的 classPath 以及下的文件
-
-6月5日
-
-
-
-
-
-## Claude responded: 有几种方式，从简单到详细排列。
+## 怎么验证下当前的 classPath 以及下的文件
 
 有几种方式，从简单到详细排列。
 
 ### 方式一：启动时打印（最直接）
 
-bash
 
 ```bash
 # 打印完整 classpath 后退出，不真正启动应用
@@ -912,7 +867,6 @@ java -cp $(java -jar lib/app.jar --print-classpath 2>/dev/null) \
 
 更简单的方式，加 JVM 参数打印：
 
-bash
 
 ```bash
 java -verbose:class \
@@ -933,7 +887,6 @@ java -verbose:class \
 
 写一个启动监听器，应用启动后自动打印：
 
-java
 
 ```java
 @Component
@@ -974,7 +927,6 @@ public class ClasspathPrinter implements ApplicationListener<ApplicationReadyEve
 
 ### 方式三：验证特定文件是否在 classpath 下可访问
 
-java
 
 ```java
 @Component
@@ -1019,7 +971,6 @@ MISSING classpath:mapper/UserMapper.xml
 
 ### 方式四：命令行直接验证 jar 内容
 
-bash
 
 ```bash
 # 查看 jar 内的文件列表
@@ -1039,7 +990,6 @@ ls lib/extlib/ | head -20
 
 ### 方式五：Actuator 端点验证（生产环境推荐）
 
-yaml
 
 ```yaml
 management:
@@ -1049,7 +999,7 @@ management:
         include: env,configprops
 ```
 
-bash
+
 
 ```bash
 # 查看所有配置来源，能看到配置文件从哪里加载的
@@ -1058,7 +1008,7 @@ curl http://localhost:8080/actuator/env | python3 -m json.tool | grep -A2 "appli
 
 输出里能看到：
 
-json
+
 
 ```json
 "applicationConfig: [file:/app/conf/application.yml]": {
@@ -1072,7 +1022,7 @@ json
 
 如果只是想快速确认 `conf/` 和 `extlib/` 有没有进 classpath，在 `application.yml` 里加一行：
 
-yaml
+
 
 ```yaml
 logging:
@@ -1090,21 +1040,10 @@ DEBUG o.s.core.io.support.PathMatchingResourcePatternResolver -
 
 从路径就能直接判断文件从哪里加载的。
 
-
 
-
 
-## You said: 加了 maven 的repack 后 lib 下会有两个 jar 一个是 app.
+## 加了 maven 的repack 后 lib 下会有两个 jar
 
-加了 maven 的repack 后 lib 下会有两个 jar 一个是 app.jar 一个 app.jar.orginal
-
-6月5日
-
-
-
-
-
-## Claude responded: 对，这是 spring-boot-maven-plugin repackage 的标准行为。
 
 对，这是 `spring-boot-maven-plugin` repackage 的标准行为。
 
@@ -1125,7 +1064,6 @@ mvn package 执行顺序：
 
 ### 两个 jar 的区别
 
-bash
 
 ```bash
 # 查看原始 jar 的 MANIFEST
@@ -1144,11 +1082,8 @@ Spring-Boot-Version: 3.x.x
 
 ---
 
-### app.jar.original 可以删掉吗
+`.original` 只是 repackage 前的备份，生产部署不需要它。可以在打包脚本里清理：
 
-可以，`.original` 只是 repackage 前的备份，生产部署不需要它。可以在打包脚本里清理：
-
-bash
 
 ```bash
 mvn package
@@ -1157,7 +1092,6 @@ rm -f target/deploy/lib/*.original
 
 或者在 maven 里配置打包完自动删除：
 
-xml
 
 ```xml
 <plugin>
@@ -1200,29 +1134,7 @@ xml
 </plugin>
 ```
 
-
 
-
-
-## You said: 这里是不是少了啥？打包出来的不像是 thin 包
-
-### excerpt_from_previous_claude_message.txt
-
-3 lines
-
-txt
-
-这里是不是少了啥？打包出来的不像是 thin 包
-
-6月5日
-
-
-
-
-
-## Claude responded: 对，这里写了注释但没有实际内容，是我的失误。
-
-对，这里写了注释但没有实际内容，是我的失误。
 
 `spring-boot-maven-plugin` 的 `repackage` 默认会把所有依赖打进去变成 fat jar。要保持 thin jar 效果，需要配置 `excludeGroupIds` 或者用 `excludes` 明确排除，但这两种方式要一个个列举依赖，很麻烦。
 
@@ -1230,7 +1142,6 @@ txt
 
 ### 正确做法：用 classifier 区分两个 jar
 
-xml
 
 ```xml
 <plugin>
@@ -1262,7 +1173,7 @@ target/deploy/lib/
 
 启动脚本用 `app-exec.jar`：
 
-bash
+
 
 ```bash
 exec java $JVM_OPTS \
@@ -1275,7 +1186,6 @@ exec java $JVM_OPTS \
 
 ### 验证是否是 thin jar
 
-bash
 
 ```bash
 # 查看 jar 大小，thin jar 通常只有几百 KB
@@ -1309,25 +1219,9 @@ target/deploy/
 
 `app-exec.jar` 里只有项目自身的类，依赖通过 `loader.path` 从 `extlib/` 加载，这才是真正的 thin jar + `PropertiesLauncher` 的正确用法。
 
-
-
-
 
 ## You said: 这个问题到底是和启动的时候执行路径有关，还是和相对jar 文件的路径有关
 
-### excerpt_from_previous_claude_message.txt
-
-9 lines
-
-txt
-
-这个问题到底是和启动的时候执行路径有关，还是和相对jar 文件的路径有关
-
-6月5日
-
-
-
-
 
 ## Claude responded: 和启动时的执行路径无关，只和 jar 文件本身的位置有关。
 
@@ -1345,7 +1239,6 @@ deploy/
 
 MANIFEST 里写的是 `../conf`，这个路径的基准永远是 **jar 文件所在目录**（`lib/`），和你在哪里执行 `java -jar` 完全没关系。
 
-bash
 
 ```bash
 # 从 deploy/ 执行
@@ -1371,6 +1264,3 @@ java -jar /opt/app/deploy/lib/app.jar
 
 之前说「启动时必须在 lib/ 目录下执行」是错的，`Class-Path` 的相对路径解析是基于 jar 文件位置，不是基于工作目录（`pwd`）。工作目录只影响 `--spring.config.location=file:conf/` 这类没有写绝对路径的参数，和 MANIFEST `Class-Path` 无关。
 
-
-
-
