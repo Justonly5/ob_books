@@ -85,12 +85,14 @@ MANIFEST.MF 默认内容：
             <addBuildEnvironmentEntries>true</addBuildEnvironmentEntries>
             <!-- 是否添加 Implementation-* 和 Specification-* 条目 -->
 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-            <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
+<addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
         </manifest>
 
         <!-- manifestEntries：手动追加任意 MANIFEST 条目 -->
         <manifestEntries>
-            <!-- 追加额外的 Class-Path 条目 -->
+            <!-- 追加额外的 Class-Path 条目 
+	            相对于启动的 jar 的目录。
+            -->
             <Class-Path>../conf</Class-Path>
             <!-- 自定义版本信息 -->
             <App-Version>${project.version}</App-Version>
@@ -99,7 +101,8 @@ MANIFEST.MF 默认内容：
         </manifestEntries>
 
         <!-- 使用外部 MANIFEST 文件完全替代自动生成 -->
-        <!-- <manifestFile>
+        <!-- 
+	        <manifestFile>
 		        src/main/resources/META-INF/MANIFEST.MF
              </manifestFile> 
         -->
