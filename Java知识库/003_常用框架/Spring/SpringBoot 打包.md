@@ -590,7 +590,7 @@ exec java $JVM_OPTS \
 
 ## 需要让 spring-boot-maven-plugin 的 repackage 生效，并指定使用 PropertiesLauncher。
 
-需要让 `spring-boot-maven-plugin` 的 repackage 生效，并指定使用 `PropertiesLauncher`。
+-Dload.path 参数要生效需要让 `spring-boot-maven-plugin` 的 repackage 生效，并指定使用 `PropertiesLauncher`。
 
 ### 调整打包配置
 
@@ -774,17 +774,13 @@ exec java $JVM_OPTS \
 |打包复杂度|低（skip repackage）|略高（需要 repackage）|
 |适合场景|路径固定的传统部署|需要灵活切换配置目录|
 
-你们当前用的 MANIFEST Class-Path 方案其实已经够用，`loader.path` 的主要优势是运行时灵活指定路径，如果部署目录结构是固定的，没有必要切换。
+`loader.path` 的主要优势是运行时灵活指定路径。
 
 
 
 ##  repackage 
 
-要 repackage 这个怎么说 是不能直接 mvn package 打吧吗
-
-可以直接 mvn package，repackage 是 spring-boot-maven-plugin 的一个 goal，它绑定在 package 阶段自动执行，不需要单独调用。
-
-可以直接 `mvn package`，`repackage` 是 `spring-boot-maven-plugin` 的一个 goal，它绑定在 `package` 阶段自动执行，不需要单独调用。
+`repackage` 是 `spring-boot-maven-plugin` 的一个 goal，它绑定在 `package` 阶段自动执行，不需要单独调用。
 
 ### 执行流程
 
@@ -802,7 +798,7 @@ mvn package
 
 ---
 
-### 之前 skip=true 的作用
+之前 skip=true 的作用
 
 
 ```xml
