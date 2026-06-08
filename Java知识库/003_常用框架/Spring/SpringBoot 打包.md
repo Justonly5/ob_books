@@ -153,23 +153,96 @@ java -Dloader.path=/app/ext \
 
 
 
-## You said: 这个打包配置 启动的时候指定 loader.
+```XML
+<plugins>  
+    <!-- 编译配置 -->  
+    <plugin>  
+        <groupId>org.apache.maven.plugins</groupId>  
+        <artifactId>maven-compiler-plugin</artifactId>  
+        <configuration>            
+	        <source>17</source>  
+            <target>17</target>  
+        </configuration>  
+    </plugin>  
+  
+    <!--  
+        Thin jar：          - 输出到 target/deploy/lib/          - MANIFEST 设置 Main-Class 和 Class-Path（extlib/ 前缀，与依赖目录对应）          - 环境相关配置文件不打入 jar，由外部 conf/ 目录提供    -->    
+    <plugin>  
+        <groupId>org.apache.maven.plugins</groupId>  
+        <artifactId>maven-jar-plugin</artifactId>  
+		<configuration>
+			<outputDirectory>${project.build.directory}/deploy/lib</outputDirectory>
+			<archive>
+				<manifest><mainClass>com.dataacc.management.OrchestrationApplication</mainClass>  
+                    <addClasspath>true</addClasspath>  
+                    <classpathPrefix>extlib/</classpathPrefix>  
+            </manifest>  
+            <manifestEntries>                    
+                <Class-Path>../conf</Class-Path>  
+            </manifestEntries>  
+            </archive>  
+            <excludes>                
+	            <exclude>application*.yml</exclude>  
+                <exclude>application*.yaml</exclude>  
+                <exclude>logback-spring.xml</exclude>  
+            </excludes>  
+        </configuration>  
+    </plugin>  
+  
+    <!--  
+        拷贝运行时依赖到 target/deploy/lib/extlib/        includeScope=runtime 涵盖 compile + runtime，排除 test    -->    <plugin>  
+        <groupId>org.apache.maven.plugins</groupId>  
+        <artifactId>maven-dependency-plugin</artifactId>  
+        <executions>            <execution>  
+                <id>copy-dependencies</id>  
+                <phase>package</phase>  
+                <goals>                    <goal>copy-dependencies</goal>  
+                </goals>  
+                <configuration>                    <outputDirectory>${project.build.directory}/deploy/lib/extlib</outputDirectory>  
+                    <includeScope>runtime</includeScope>  
+                    <overWriteIfNewer>true</overWriteIfNewer>  
+                </configuration>  
+            </execution>  
+        </executions>  
+    </plugin>  
+  
+    <!--  
+        拷贝配置文件到 target/deploy/conf/        
+        db/migration SQL 保留在 jar 内供 Flyway 加载，不在此处复制    
+        -->    
+        <plugin>  
+        <groupId>org.apache.maven.plugins</groupId>  
+        <artifactId>maven-resources-plugin</artifactId>  
+        <executions>            <execution>  
+                <id>copy-config</id>  
+                <phase>package</phase>  
+                <goals>                    <goal>copy-resources</goal>  
+                </goals>  
+                <configuration>                    <outputDirectory>${project.build.directory}/deploy/conf</outputDirectory>  
+                    <resources>                        <resource>  
+                            <directory>src/main/resources</directory>  
+                            <filtering>false</filtering>  
+                            <includes>                                <include>application*.yml</include>  
+                                <include>application*.yaml</include>  
+                                <include>logback-spring.xml</include>  
+                            </includes>  
+                        </resource>  
+                    </resources>  
+                </configuration>  
+            </execution>  
+        </executions>  
+    </plugin>  
+  
+    <!--  
+        跳过 spring-boot 的 fat jar 重打包；        可执行入口由 maven-jar-plugin 的 MANIFEST Main-Class 承担    -->    <plugin>  
+        <groupId>org.springframework.boot</groupId>  
+        <artifactId>spring-boot-maven-plugin</artifactId>  
+        <configuration>            <skip>true</skip>  
+        </configuration>  
+    </plugin>  
+</plugins>
+```
 
-<build> <plugins> <!-- 编译配置 --> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-compiler-plugin</artifactId> <configuration> <source>17</source> <target>
-
-pasted
-
-这个打包配置 启动的时候指定 loader.path=lib/extlib,spring.config.location=conf, 那么 conf 下的 mapper、logback-spring.xml 会被使用吗
-
-6月5日
-
-
-
-
-
-## Claude responded: 看这个打包配置，有两个问题需要分析。
-
-看这个打包配置，有两个问题需要分析。
 
 ### 先看打包结构
 
