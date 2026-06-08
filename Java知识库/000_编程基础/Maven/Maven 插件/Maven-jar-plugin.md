@@ -113,3 +113,15 @@ MANIFEST.MF 默认内容：
     </archive>
 </configuration>
 ```
+
+### 几条原则
+
+- **配置文件不打入 jar**，通过外部 conf/ 目录管理，方便不同环境独立配置，不需要重新打包。
+
+- **`classpathLayoutType` 用 `simple`**，依赖平铺在 extlib/ 下，路径短，和 `maven-dependency-plugin` 的输出目录对应。
+
+- **`manifestEntries` 里加构建信息**，`App-Version`、`Build-Time`、`Git-Commit` 写进 MANIFEST，运维直接 `unzip -p app.jar META-INF/MANIFEST.MF` 就能查版本，不需要进应用查接口。
+
+- **Flyway migration SQL 保留在 jar 内**，不要排除 `db/migration/**`，Flyway 通过 classpath 加载，必须在 jar 内，或则需要配置 Flyway 目录。
+
+- **mapper xml 保留在 jar 内**，同理 MyBatis 的 mapper xml 通过 classpath 加载，不应该排除，或则需要配置 mapper 目录。
