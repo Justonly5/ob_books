@@ -301,7 +301,6 @@ Class-Path: extlib/spring-boot.jar extlib/mysql.jar ...
 
 所以正确的启动方式是：
 
-bash
 
 ```bash
 # 不需要 loader.path，Class-Path 已经在 MANIFEST 里写死了 extlib/
@@ -440,9 +439,8 @@ conf/ 已在 classpath
 # 会产生重复加载，需要确认两个地方的文件是否一致
 ```
 
----
+----
 
-### 但有一个重要问题要注意
 
 `Class-Path` 里的路径是相对于 **jar 文件所在目录**解析的，也就是 `lib/` 目录。
 
@@ -455,101 +453,7 @@ target/deploy/
 ```
 
 
-```bash
-# 正确：在 deploy/ 目录下执行
-cd target/deploy
-java -jar lib/app.jar --spring.config.location=file:conf/
 
-# 错误：在其他目录执行，../conf 解析位置不对
-cd target/deploy/lib
-java -jar app.jar  ← 此时 ../conf 指向 deploy/conf，反而是对的
-
-# 最稳妥：用绝对路径
-java -jar /app/lib/app.jar \
-     --spring.config.location=file:/app/conf/
-```
-
----
-
-### 加了 manifestEntries 后的完整启动命令
-
-
-
-```bash
-java -jar lib/app.jar \
-     --spring.config.location=file:conf/
-```
-
-`--logging.config` 不再需要，`logback-spring.xml` 会通过 classpath 自动加载。
-
-## You said: 最终目录结构为 bin/start.
-
-最终目录结构为 bin/start.sh ，lib/ ，conf/ 三个目录。 start.sh 会在当前目录下执行 java -jar lib/app.jar -Dload.path=.,conf,lib/extlib 这样有问题吗
-
-
-
-## Claude responded: 有几个问题，逐一分析。
-
-有几个问题，逐一分析。
-
-### 问题一：`-D` 参数位置错误
-
-
-```bash
-# 错误写法：-D 参数放在 jar 后面，会被当成程序参数而不是 JVM 参数
-java -jar lib/app.jar -Dloader.path=.,conf,lib/extlib
-
-# 正确写法：-D 参数必须在 -jar 之前
-java -Dloader.path=.,conf,lib/extlib -jar lib/app.jar
-```
-
-### 问题二：loader.path 对这个项目无效
-
-如前面分析，这个项目跳过了 `spring-boot-maven-plugin` 的 repackage，打出来的是普通 thin jar，用标准 JVM 启动，不存在 `PropertiesLauncher`，所以 `loader.path` 完全不起作用。
-
-依赖加载已经由 MANIFEST 的 `Class-Path` 条目负责，不需要 `loader.path`。
-
-### 问题三：工作目录与相对路径
-
-`start.sh` 在 `bin/` 目录下，执行 `java -jar lib/app.jar` 时，相对路径基准是 `bin/`，但 jar 和 conf 都在上一级：
-
-```
-deploy/
-  bin/
-    start.sh         ← 从这里执行
-  lib/
-    app.jar          ← MANIFEST 里 ../conf 是相对 lib/ 的，指向 deploy/conf ✓
-    extlib/
-  conf/
-    application.yml
-    logback-spring.xml
-```
-
-`start.sh` 从 `bin/` 执行时：
-
-
-```bash
-# lib/app.jar 相对 bin/ 找不到
-java -jar lib/app.jar   # 报错：找不到 lib/app.jar
-```
-
-### 正确的 start.sh 写法
-
-
-```bash
-#!/bin/bash
-
-# 获取 start.sh 所在目录，再往上一级得到部署根目录
-BASE_DIR=$(cd "$(dirname "$0")/.." && pwd)
-
-echo "BASE_DIR: $BASE_DIR"
-
-# 所有路径都用绝对路径，不依赖工作目录
-java -jar "$BASE_DIR/lib/app.jar" \
-     --spring.config.location=file:"$BASE_DIR/conf/"
-```
-
-这样无论从哪个目录执行 `start.sh`，路径都能正确解析。
 
 ---
 
@@ -558,34 +462,14 @@ java -jar "$BASE_DIR/lib/app.jar" \
 你加了 `<Class-Path>../conf</Class-Path>`，这个路径是相对于 **jar 文件所在目录**（`lib/`）解析的：
 
 ```
-lib/app.jar 位置 → lib/
-../conf           → deploy/conf/  ✓ 正确
+lib/app.jar 位置   → lib/
+../conf            → deploy/conf/  ✓ 正确
 ```
 
 所以 `conf/` 进了 classpath，`logback-spring.xml` 会自动加载，没问题。
 
 ---
 
-### 最终建议的 start.sh
-
-
-```bash
-#!/bin/bash
-
-BASE_DIR=$(cd "$(dirname "$0")/.." && pwd)
-
-# JVM 参数
-JVM_OPTS="-Xms512m -Xmx1g \
-          -XX:+UseContainerSupport \
-          -XX:MaxRAMPercentage=75.0 \
-          -XX:+ExitOnOutOfMemoryError"
-
-exec java $JVM_OPTS \
-     -jar "$BASE_DIR/lib/app.jar" \
-     --spring.config.location=file:"$BASE_DIR/conf/"
-```
-
-用 `exec` 替换当前 shell 进程，让 java 进程直接成为 PID 1（或 tini 的子进程），保证 K8s 优雅停机信号能正确传递，这也是之前讨论过的最佳实践。
 
 
 ## 需要让 spring-boot-maven-plugin 的 repackage 生效，并指定使用 PropertiesLauncher。
