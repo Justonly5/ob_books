@@ -445,3 +445,19 @@ settings.xml 只需要配一个地址：
   http://nexus.company.com/repository/maven-public/
 ```
 
+有私服的情况下 mirror 的作用变化
+
+**没有私服时，mirror 的作用：**
+
+```
+开发机 → mirror（阿里云）→ Maven Central
+解决：国内访问 Central 慢的问题
+```
+
+**有私服后，mirror 的作用：**
+
+```
+开发机 → mirror → 私服 Group → maven-central（Proxy）→ Maven Central
+```
+
+私服的 Proxy 仓库已经承担了代理和缓存的职责，mirror 变成了「把请求指向私服」的路由配置，本身不再做加速。
