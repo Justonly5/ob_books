@@ -402,6 +402,8 @@ settings 结构：
 
 ### Tips
 
+#### repository
+
 - repository 只能在 profile 里配置， setting 里的优先级低于 pom 文件里的 repository。profile 没有 active 的话 repository 不会生效。
 
 生效机制和优先级
@@ -419,3 +421,5 @@ Maven 解析依赖时，仓库的查找顺序如下：
         ↓ 未命中
 5. 报错
 ```
+
+#### mirrors 与私服
