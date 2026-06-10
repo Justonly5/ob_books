@@ -399,3 +399,23 @@ settings 结构：
 
 </settings>
 ```
+
+### Tips
+
+- repository 只能在 profile 里配置， setting 里的优先级低于 pom 文件里的 repository。profile 没有 active 的话 repository 不会生效。
+
+生效机制和优先级
+
+Maven 解析依赖时，仓库的查找顺序如下：
+
+```
+1. 本地仓库（~/.m2/repository）
+        ↓ 未命中
+2. settings.xml activeProfiles 里的 repository，多个 profile 激活时，后面的优先级更高
+        ↓ 未命中
+3. pom.xml 里的 repository
+        ↓ 未命中
+4. Super POM 里的 central（内置，始终存在）
+        ↓ 未命中
+5. 报错
+```
