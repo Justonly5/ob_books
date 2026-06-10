@@ -38,9 +38,6 @@ settings 结构：
 | `activeProfiles`     | 否    | 是                   | 激活指定 profile                 |
 | `pluginGroups`       | 否    | 是                   | 简化插件命令                       |
 
-
-![[Pasted image 20260610102802.png]]
-
 ### 完整示例
 -----
 
@@ -445,7 +442,7 @@ settings.xml 只需要配一个地址：
   http://nexus.company.com/repository/maven-public/
 ```
 
-有私服的情况下 mirror 的作用变化
+有私服的情况下 mirror 的作用有所变化：
 
 **没有私服时，mirror 的作用：**
 
@@ -461,3 +458,83 @@ settings.xml 只需要配一个地址：
 ```
 
 私服的 Proxy 仓库已经承担了代理和缓存的职责，mirror 变成了「把请求指向私服」的路由配置，本身不再做加速。
+
+mirror 在有私服时仍然不可缺少。
+
+**没有 mirror，必须在每个 pom.xml 里配 repository：**
+
+
+```xml
+<!-- 没有 mirror 的话，每个项目都要加这段 -->
+<repositories>
+  <repository>
+    <id>nexus</id>
+    <url>http://nexus.company.com/repository/maven-public/</url>
+  </repository>
+</repositories>
+```
+
+**有了 mirror，settings.xml 配一次全局生效：**
+
+
+```xml
+<!-- 一次配置，所有项目都走私服，不需要改任何 pom.xml -->
+<mirror>
+  <id>nexus</id>
+  <url>http://nexus.company.com/repository/maven-public/</url>
+  <mirrorOf>*</mirrorOf>
+</mirror>
+```
+
+所以 mirror 在有私服的场景下，核心作用变成了**强制所有项目走私服，而不需要每个项目单独配**。
+
+---
+
+两种配法的区别
+
+```
+方案一：mirror=* 指向私服 Group
+  优点：settings.xml 一处配置全局生效
+        pom.xml 干净，不含任何仓库配置
+        新项目不需要做任何额外配置
+  缺点：所有请求强制走私服，私服挂了全部失败
+
+方案二：不配 mirror，在 profile 里配 repository
+  优点：更灵活，可以按项目配不同仓库
+        私服挂了某些项目可以降级直连
+  缺点：每个项目都要配，容易遗漏
+        pom.xml 里带了仓库地址，不够干净
+```
+
+---
+实际结论
+
+有私服的情况下，mirror 的定位是：
+
+```
+不是「加速工具」（私服 Proxy 做这个）
+而是「统一路由入口」（把所有请求强制导向私服）
+```
+
+企业内网场景下，`mirrorOf=*` 指向私服 Group 是标准做法，mirror 依然是必要配置，只是职责从「加速」变成了「统一管控入口」。
+
+
+
+## repo、mirrors、profiles
+
+![[Pasted image 20260610102802.png]]
+
+
+### 一、repositories（远程仓库）
+
+定义 Maven 去哪里下载依赖，可以配在 `settings.xml` 里（全局生效）或 `pom.xml` 里（项目生效）。
+
+### 二、mirrors（镜像）
+
+Mirror 是仓库的代理拦截层，配置后所有匹配的仓库请求都会被重定向到 mirror 地址。**Mirror 不是 Repository，它拦截的是 repository 的请求。**
+
+### 三、profiles（配置集）
+
+Profile 是一组配置的集合，可以按环境激活，包含 repositories、properties、pluginRepositories 等。
+
+
