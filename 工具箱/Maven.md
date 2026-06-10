@@ -58,13 +58,10 @@ settings 结构：
 
     <!-- 本地仓库路径，默认 ~/.m2/repository -->
     <localRepository>/data/maven/repository</localRepository>
-
     <!-- 是否使用交互模式，CI 环境设 false，默认 true -->
     <interactiveMode>true</interactiveMode>
-
     <!-- 是否离线模式，只使用本地仓库，默认 false -->
     <offline>false</offline>
-
     <!-- 插件自动更新检测，默认 true -->
     <usePluginRegistry>false</usePluginRegistry>
 
