@@ -424,3 +424,20 @@ Maven 解析依赖时，仓库的查找顺序如下：
 
 #### mirrors 与私服
 
+私服有几个作用：
+- 代理外网仓库（Proxy Repository）
+
+
+- 托管私有包（Hosted Repository）
+- Group 聚合（Group Repository）
+把多个仓库合并成一个虚拟入口，客户端只配一个地址：
+
+```
+maven-public (Group)
+  ├── maven-releases  (Hosted)
+  ├── maven-snapshots (Hosted)
+  └── maven-central   (Proxy → Maven Central)
+
+settings.xml 只需要配一个地址：
+  http://nexus.company.com/repository/maven-public/
+```
