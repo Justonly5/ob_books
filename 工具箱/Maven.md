@@ -426,7 +426,13 @@ Maven 解析依赖时，仓库的查找顺序如下：
 
 私服有几个作用：
 - 代理外网仓库（Proxy Repository）
-
+```
+开发机 → Nexus Proxy → Maven Central / 阿里云 / ...
+                ↓
+         缓存到 Nexus 本地
+                ↓
+         下次相同请求直接从 Nexus 返回，不再访问外网
+```
 
 - 托管私有包（Hosted Repository）
 - Group 聚合（Group Repository）
@@ -441,3 +447,4 @@ maven-public (Group)
 settings.xml 只需要配一个地址：
   http://nexus.company.com/repository/maven-public/
 ```
+
