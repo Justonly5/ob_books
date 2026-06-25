@@ -27,8 +27,11 @@ openclaw configure --section model
 ```
 
 启动网关
-```
+```bash
+## 前台运行
 openclaw gateway run 
+## 后台运行
+openclaw gateway start 
 ```
 
 重启网关
