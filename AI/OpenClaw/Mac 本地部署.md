@@ -26,6 +26,11 @@ openclaw --version
 openclaw configure --section model
 ```
 
+启动网关
+```
+openclaw gateway run 
+```
+
 重启网关
 ```bash
 openclaw gateway restart
