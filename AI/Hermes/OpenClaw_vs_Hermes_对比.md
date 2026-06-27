@@ -441,3 +441,215 @@ WhatsApp / Telegram / Slack / Discord / Signal / iMessage / ...
 | 工具与集成 | ✅ 除视频生成外均准确 |
 | 部署选项 | ✅ 准确 |
 | 选型建议 | ✅ 合理 |
+
+---
+
+## 附录二：Hermes 七层安全架构详解（2026-06-26）
+
+> 基于 Hermes Agent 官方文档 [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) 及 Docker 容器内 v0.17.0 实际运行状态整理。
+
+### 总览
+
+Hermes 的七层安全架构是**从设计之初就内置的防御纵深（defense-in-depth）**，而非事后修补。每一层解决一个不同的攻击面，且层与层之间独立运作——即使某一层被绕过，下一层仍然生效。
+
+---
+
+### 第一层：用户授权（User Authorization）
+
+**谁可以跟 Agent 说话。**
+
+**Hermes 实现：**
+- **每平台 allowlist** — `TELEGRAM_ALLOWED_USERS=12345,67890` 等
+- **全局 allowlist** — `GATEWAY_ALLOWED_USERS=12345,67890`
+- **DM 配对系统** — 8 字符无歧义字母表（去掉了 0/O/1/I）、加密随机生成、1 小时 TTL、每用户 10 分钟限频、最多 3 个待审批码、5 次失败锁定 1 小时、文件权限 `chmod 0600`
+- **默认拒绝** — 没有任何 allowlist 时，所有用户被拒绝
+
+**vs OpenClaw：** OpenClaw 也有 allowlist 和配对码，但配对码是 6 位数字（10^6 = 100 万组合），Hermes 是 8 位 32 字符字母表（32^8 ≈ 10^12 组合），暴力破解难度高 1000 万倍。且 Hermes 有显式的失败锁定机制，OpenClaw 没有。
+
+---
+
+### 第二层：危险命令审批（Dangerous Command Approval）
+
+**执行破坏性操作前必须人工确认。**
+
+**Hermes 实现：**
+- **三种模式：**
+  - `manual`（默认）— 每次触发都弹窗
+  - `smart` — 辅助 LLM 评估风险，低风险自动放行，高风险自动拒绝，不确定的升级到人工
+  - `off` — 完全关闭（仅限可信环境）
+- **审批超时** — 默认 60 秒无响应则拒绝（fail-closed）
+- **审批流：** CLI 弹 4 选项（一次/本次会话/永久允许/拒绝），网关弹交互按钮
+- **永久 allowlist** — 写入 `config.yaml`，后续会话自动放行
+
+**🔥 关键差异：硬线黑名单（Hardline Blocklist）**
+
+这是 Hermes 最硬的一层，也是跟 OpenClaw 最本质的区别：
+
+```
+rm -rf /                    # 擦除根文件系统
+:(){ :|:& };:               # fork 炸弹
+mkfs.* 挂载中的根设备        # 格式化系统盘
+dd if=/dev/zero of=/dev/sd* # 清零物理磁盘
+管道未信任 URL 到 sh         # RCE 攻击向量
+```
+
+**这些命令在任何模式下都不可执行：**
+- `--yolo` 模式 → ❌ 不行
+- `approvals.mode: off` → ❌ 不行
+- Cron 任务的 `approve` 模式 → ❌ 不行
+- 用户点了"始终允许" → ❌ 不行
+
+这个黑名单在审批层**之前**拦截，没有任何覆盖标志。
+
+**vs OpenClaw：** OpenClaw 有 `security audit` 命令和 fs-safe 层，但**没有硬线黑名单**。它的审批是软性的，理论上可以被绕过。早期 CVE（CVE-2026-25253 等）也说明其安全模型是演进式的，不是设计之初就内置的。
+
+---
+
+### 第三层：容器隔离（Container Isolation）
+
+**Agent 在沙箱里搞破坏也伤不到宿主机。**
+
+**Hermes 实现：**
+Docker 容器启动时强制应用的安全标志：
+
+```python
+--cap-drop ALL                # 丢弃所有 Linux 内核能力
+--cap-add DAC_OVERRIDE        # 仅保留写入挂载目录的能力
+--cap-add CHOWN               # 包管理器需要
+--cap-add FOWNER              # 同上
+--security-opt no-new-privileges  # 阻止提权
+--pids-limit 256              # 限制进程数，防 fork 炸弹
+--tmpfs /tmp:rw,nosuid,size=512m   # 限制 /tmp 大小
+--tmpfs /var/tmp:rw,noexec,nosuid   # /var/tmp 不可执行
+```
+
+资源限制可配置：
+
+```yaml
+container_cpu: 1
+container_memory: 5120   # MB
+container_disk: 51200    # MB
+```
+
+终端后端安全对比：
+
+| 后端 | 隔离性 | 危险命令检查 | 适用场景 |
+|------|--------|------------|---------|
+| local | ❌ 无隔离 | ✅ 需要 | 开发环境 |
+| ssh | ✅ 远程机器 | ✅ 需要 | 远程服务器 |
+| docker | ✅ 容器隔离 | ❌ 跳过（容器即边界） | **生产网关** |
+| modal | ✅ 云沙箱 | ❌ 跳过 | 可扩展云隔离 |
+| singularity | ✅ 容器 | ❌ 跳过 | HPC 环境 |
+
+**vs OpenClaw：** OpenClaw 也有 Docker 部署，但**没有 Hermes 这么严格的默认安全标志**（cap-drop ALL、no-new-privileges、pids-limit 等）。OpenClaw 的 fs-safe 层是文件操作级别的安全，不是进程/容器级别的隔离。
+
+---
+
+### 第四层：MCP 凭证过滤（MCP Credential Filtering）
+
+**MCP 子进程拿不到宿主机的敏感环境变量。**
+
+**Hermes 实现：**
+MCP stdio 子进程只接收白名单环境变量：
+
+```
+PATH, HOME, USER, LANG, LC_ALL, TERM, SHELL, TMPDIR
+```
+
+加上 `XDG_*` 变量。**其他所有环境变量（API Key、Token、密钥）全部剥离。**
+
+只有在 MCP 配置中显式声明的 env 才会传入：
+
+```yaml
+mcp_servers:
+  github:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_PERSONAL_ACCESS_TOKEN: "ghp_..."  # 只有这个传进去
+```
+
+错误信息也会被清理，匹配到 `sk-...`、`ghp_...`、`Bearer`、`key=` 等模式自动替换为 `[REDACTED]`。
+
+**vs OpenClaw：** OpenClaw 也支持 MCP，但**没有文档化的凭证过滤机制**。MCP 子进程默认继承父进程的全部环境变量，存在凭证泄露风险。
+
+---
+
+### 第五层：上下文文件扫描（Context File Scanning）
+
+**防止项目文件中的 prompt injection 攻击 Agent。**
+
+**Hermes 实现：**
+`AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`SOUL.md` 等上下文文件在注入系统提示前会经过扫描器检查：
+
+- 指示忽略/无视先前指令的模式
+- 隐藏的 HTML 注释中的可疑关键词
+- 尝试读取密钥文件（`.env`、credentials、`.netrc`）
+- 通过 curl 外泄凭证
+- 不可见 Unicode 字符（零宽空格、双向覆盖符）
+
+命中扫描器的内容被替换为：
+
+```
+[BLOCKED: AGENTS.md contained potential prompt injection. Content not loaded.]
+```
+
+**vs OpenClaw：** OpenClaw 没有这个能力。它的 `MEMORY.md` / `USER.md` 直接注入到系统提示，没有经过 prompt injection 扫描。这是 Hermes 独有的安全层。
+
+---
+
+### 第六层：跨会话隔离（Cross-Session Isolation）
+
+**一个会话不能访问另一个会话的数据或状态。**
+
+**Hermes 实现：**
+- 每个会话有独立的 session store
+- Cron 任务的存储路径经过路径遍历攻击防护
+- 会话文件权限严格控制
+- 不同 profile 的数据完全隔离
+
+**vs OpenClaw：** OpenClaw 也有会话隔离（每个 Agent 独立 workspace），但**没有文档化的路径遍历防护**。Hermes 在这层多了一个 Cron 存储路径的硬化处理。
+
+---
+
+### 第七层：输入清理（Input Sanitization）
+
+**防止 shell 注入和 SSRF 攻击。**
+
+**Hermes 实现：**
+Terminal 工具后端的**工作目录参数**会经过白名单验证，防止恶意路径注入。所有 URL 工具（web search、web extract、vision、browser）在请求前验证 URL，防止 SSRF：
+
+- 私有网络（RFC 1918）：`10.0.0.0/8`、`172.16.0.0/12`、`192.168.0.0/16`
+- 回环地址：`127.0.0.0/8`、`::1`
+- 链路本地：`169.254.0.0/16`（含云元数据 `169.254.169.254`）
+- CGNAT：`100.64.0.0/10`（Tailscale、WireGuard VPN）
+- 云元数据 hostname：`metadata.google.internal`
+- **重定向链每跳重新验证**，防止重定向绕过
+
+另外还有 **Tirith 预执行扫描** — 在命令执行前检测同形字 URL 欺骗、管道到解释器模式（`curl | bash`）、终端注入攻击。Tirith 自带 SHA-256 校验和验证 + cosign 来源验证。
+
+**vs OpenClaw：** OpenClaw 有 fs-safe 层（根边界限制），但**没有 SSRF 保护**、**没有 Tirith 扫描**、**没有重定向链验证**。OpenClaw 的 URL 处理相对简单。
+
+---
+
+### 总结对比表
+
+| 安全层 | Hermes | OpenClaw |
+|--------|--------|----------|
+| **① 用户授权** | 平台 allowlist + 全局 allowlist + 加密配对码（8 字符 32 字母表）+ 5 次失败锁定 | allowlist + 6 位数字配对码，无失败锁定 |
+| **② 危险命令审批** | 三层模式（manual/smart/off）+ **硬线黑名单不可绕过** | 有审批，但无硬线黑名单 |
+| **③ 容器隔离** | cap-drop ALL + no-new-privileges + pids-limit + tmpfs 限制 | 有 Docker 部署，但无默认硬化标志 |
+| **④ MCP 凭证过滤** | 环境变量白名单 + 错误信息自动脱敏 | 无文档化凭证过滤 |
+| **⑤ 上下文文件扫描** | Prompt injection 检测 + 不可见 Unicode 检测 | ❌ 无 |
+| **⑥ 跨会话隔离** | 独立 session store + 路径遍历防护 | 有 workspace 隔离，无路径遍历防护 |
+| **⑦ 输入清理** | SSRF 保护 + 重定向链验证 + Tirith 预执行扫描 | fs-safe 根边界限制，无 SSRF/Tirith |
+
+**额外 Hermes 有但 OpenClaw 没有的：**
+- 🔄 **回退提供商链** — 主模型挂了自动切备用，避免单点故障
+- 🔑 **凭证池** — 多个 API Key 自动轮换，应对限速
+- 📋 **供应链安全扫描** — 启动时检查已知被投毒的 Python 包版本
+- 📦 **懒加载安全** — 可选依赖按需安装，不引入不必要的攻击面
+
+**OpenClaw 有但 Hermes 没有的：**
+- 📱 移动节点（iOS/Android）— 但这是功能不是安全
+- 🎨 Canvas 系统 — 同上
