@@ -3,13 +3,13 @@ OpenClaw **支持 OpenAI 协议的 HTTP 接口**。根据官方文档 `gateway/o
 
 ## 支持的端点
 
-| 端点 | 说明 |
-|------|------|
+| 端点                          | 说明                         |
+| --------------------------- | -------------------------- |
 | `POST /v1/chat/completions` | Chat Completions（支持流式 SSE） |
-| `GET /v1/models` | 模型列表 |
-| `GET /v1/models/{id}` | 单个模型详情 |
-| `POST /v1/embeddings` | 向量嵌入 |
-| `POST /v1/responses` | Responses API |
+| `GET /v1/models`            | 模型列表                       |
+| `GET /v1/models/{id}`       | 单个模型详情                     |
+| `POST /v1/embeddings`       | 向量嵌入                       |
+| `POST /v1/responses`        | Responses API              |
 
 所有端点复用 Gateway 的 HTTP 端口（默认 18789），与 WebSocket 多路复用。
 
