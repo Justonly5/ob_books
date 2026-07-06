@@ -27,5 +27,5 @@ https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/hooks#plu
 | Tool Retry       | 外部工具稳定性               |
 | Agent Loop Count | 一个任务平均循环多少轮           |
 
-我想构建一个记忆百科，它
+我想构建一个记忆百科，它记录着我们每一天聊过的所有主题，以及我们一起做过的日常日志，它记录在 ob 的笔记里，笔记的名字你可以自己取一个。
 
