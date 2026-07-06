@@ -26,3 +26,6 @@ https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/hooks#plu
 | Planner Retry    | Planner 是否经常走弯路       |
 | Tool Retry       | 外部工具稳定性               |
 | Agent Loop Count | 一个任务平均循环多少轮           |
+
+我想构建一个记忆百科，它
+
