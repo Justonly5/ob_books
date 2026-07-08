@@ -1,5 +1,16 @@
+
+## 持久化目录
+
+/opt/data 
+
+
 ## 文件上传目录
 HERMES_DASHBOARD_FILES_ROOT 用于配置 Dashboard 的文件上传/浏览就锁定在那个目录下。
+
+
+## 敏感数据加密解密
+
+
 
 ## openAI 协议接口
 
