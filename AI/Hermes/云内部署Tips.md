@@ -1,4 +1,13 @@
 
+## charts 编写
+
+
+## soul
+
+## skills
+
+## workspace
+
 ## 持久化目录
 
 /opt/data 
