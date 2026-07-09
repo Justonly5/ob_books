@@ -1,10 +1,8 @@
 ## 前端适配
-- 前端创建实例的时候选择创建的实例类型，是 openclaw 还是 hermes。
-
+- 前端创建实例的时候支持选择创建的实例类型，是 openclaw 还是 hermes。
 
 ## claw-admin 适配
-admin-server 适配创建 hermes 实例。
-
+admin-server 需支持管理 hermes 实例。
 
 ## chatbot 适配
 
@@ -22,7 +20,7 @@ admin-server 适配创建 hermes 实例。
 - set：设置模型
 
 ## charts 模版编写
-涉及 deployment、service、configMap、secret（如果需要）、networkPolicy、ingress 等资源模版文件编写。
+涉及 deployment、service、configMap、secret（按需）、networkPolicy、ingress 等资源模版文件编写。
 
 
 ## Anget 元数据
@@ -35,9 +33,7 @@ admin-server 适配创建 hermes 实例。
 >  - 如果它应该随你到处适用，属于 `SOUL.md`
    - 如果它属于某个项目，属于 `AGENTS.md`
   
-
 ### config.yaml
-
 
 
 ## 技能管理
@@ -50,6 +46,7 @@ admin-server 适配创建 hermes 实例。
 ## 持久化目录
 
 /opt/data 
+该目录下现在包含了 hermes 所有需持久化的文件，例如记忆、会话、skills de
 
 
 ## 文件上传目录
