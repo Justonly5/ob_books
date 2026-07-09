@@ -9,12 +9,12 @@
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │  K8s Cluster                                                        │
-│                                                                      │
+│                                                                     │
 │  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  Hermes Pod (replicas: 1)                                     │   │
-│  │                                                                │   │
-│  │  /init (s6-svscan, PID 1)                                     │   │
-│  │  ├── main-hermes (s6 占位服务)                                 │   │
+│  │  Hermes Pod (replicas: 1)                                    │   │
+│  │                                                              │   │
+│  │  /init (s6-svscan, PID 1)                                    │   │
+│  │  ├── main-hermes (s6 占位服务)                                │  │
 │  │  ├── dashboard  (s6 服务) ── hermes dashboard :9119           │   │
 │  │  └── 主程序 (CMD) ── hermes gateway run                       │   │
 │  │       ├── 消息平台适配器 (飞书/企微/Telegram...)               │   │
