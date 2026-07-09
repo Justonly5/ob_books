@@ -14,9 +14,21 @@
 - set：设置模型
 
 ## charts 模版编写
+涉及 deployment、service、configMap、secret（如果需要）、networkPolicy、ingress 等资源模版文件编写。
 
 
-## soul
+## Anget 元数据
+
+### SOUL.MD
+
+### AGENT.MD
+
+>一个实用的判断规则：
+>如果它应该随你到处适用，属于 `SOUL.md`
+   - 如果它属于某个项目，属于 `AGENTS.md`
+
+### config.yaml
+
 
 
 ## 技能
