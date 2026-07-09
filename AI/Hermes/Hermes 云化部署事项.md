@@ -1,82 +1,89 @@
-## 前端适配
+
+
+## 开发事项
+
+### 前端适配
+
 - 前端创建实例的时候支持选择创建的实例类型，是 openclaw 还是 hermes。
 
-## claw-admin 适配
+### claw-admin 适配
+
 admin-server 需支持管理 hermes 实例。
 
-## chatbot 适配
+### chatbot 适配
 
-### chat
+#### chat
+
 聊天接口。
 
-### session
+#### session
+
 会话控制，涉及以下两个接口：
+
 - list：查询会话列表
 - get：
 
-### model
+#### model
+
 模型控制相关，涉及以下两个接口：
+
 - list：查询模型列表
 - set：设置模型
 
-## charts 模版编写
+### hermes charts 模版编写
+
 涉及 deployment（或者 StatefulSet）、service、configMap、secret（按需）、networkPolicy、ingress 等资源模版文件编写。
 
+## Hermes 相关
 
-## Anget 元数据
+### 镜像
 
-### SOUL.MD
+### Anget 元数据
 
-### AGENT.MD
+#### SOUL.MD
 
->一个实用的判断规则：
->  - 如果它应该随你到处适用，属于 `SOUL.md`
-   - 如果它属于某个项目，属于 `AGENTS.md`
-  
-### config.yaml
+#### AGENT.MD
 
+一个实用的判断规则：
 
-## 技能管理
+- 如果它应该随你到处适用，属于 `SOUL.md`
+- 如果它属于某个项目，属于 `AGENTS.md`
+
+#### config.yaml
+
+### 技能管理
+
 内置技能、可选的技能、自建技能等。
 
+### 持久化目录
 
-## 持久化目录
-
-/opt/data 
-
-
+/opt/data
 
 该目录下现在包含了 hermes 所有需持久化的文件，例如记忆、会话、skills 等，也包含日志。
 
+#### 日志
 
-### 日志
-
-
-### 文件上传目录
+#### 文件上传目录
 
 HERMES_DASHBOARD_FILES_ROOT 用于配置 Dashboard 的文件上传/浏览就锁定在那个目录下。
 
+### 敏感数据加密解密
 
-## 敏感数据加密解密
+### 监控
 
-
-
-
-## 监控
-
-
-| Metric           | 用途                    |
-| ---------------- | --------------------- |
-| Conversation 数   | 每天 Agent 使用量          |
-| Skill 调用次数       | 哪些 Skill 最热门          |
-| Skill 成功率        | 哪些 Skill 最容易失败        |
-| Tool 耗时 P95      | 哪些外部依赖是瓶颈             |
-| Token 消耗         | 成本分析                  |
-| Cost             | 每用户 / 每 Agent / 每模型成本 |
-| Memory Hit Rate  | 长期记忆是否真正发挥作用          |
-| Planner Retry    | Planner 是否经常走弯路       |
-| Tool Retry       | 外部工具稳定性               |
-| Agent Loop Count | 一个任务平均循环多少轮           |
+|   |   |
+|---|---|
+|Metric|用途|
+|Conversation 数|每天 Agent 使用量|
+|Skill 调用次数|哪些 Skill 最热门|
+|Skill 成功率|哪些 Skill 最容易失败|
+|Tool 耗时 P95|哪些外部依赖是瓶颈|
+|Token 消耗|成本分析|
+|Cost|每用户 / 每 Agent / 每模型成本|
+|Memory Hit Rate|长期记忆是否真正发挥作用|
+|Planner Retry|Planner 是否经常走弯路|
+|Tool Retry|外部工具稳定性|
+|Agent Loop Count|一个任务平均循环多少轮|
 
 ## Tips
 
