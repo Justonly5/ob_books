@@ -15,7 +15,7 @@
 │  │                                                              │   │
 │  │  /init (s6-svscan, PID 1)                                    │   │
 │  │  ├── main-hermes (s6 占位服务)                                │  │
-│  │  ├── dashboard  (s6 服务) ── hermes dashboard :9119           │   │
+│  │  ├── dashboard  (s6 服务) ── hermes dashboard :9119          │   │
 │  │  └── 主程序 (CMD) ── hermes gateway run                       │   │
 │  │       ├── 消息平台适配器 (飞书/企微/Telegram...)               │   │
 │  │       ├── API Server :8642 (OpenAI 兼容)                       │   │
@@ -24,8 +24,8 @@
 │  │                                                                │   │
 │  │  本地存储: /opt/data                                           │   │
 │  │  ├── config.yaml / .env / auth.json                            │   │
-│  │  ├── state.db (SQLite 会话)                                    │   │
-│  │  ├── skills/ / sessions/ / logs/ / cron/                       │   │
+│  │  ├── state.db (SQLite 会话)                                   │   │
+│  │  ├── skills/ / sessions/ / logs/ / cron/                     │   │
 │  └──────────────────────────────────────────────────────────────┘   │
 │                                                                      │
 │  sidecar 应用 ──WS──▶ hermes-dashboard:9119/api/ws                  │
@@ -64,9 +64,12 @@ spec:
       storage: 50Gi
 ```
 
-> 如果使用云厂商的 CBS（腾讯云）/ ESSD（阿里云）块存储，直接创建 PVC 即可，无需手动创建 PV。
 
 ### 2.2 目录结构
+以下目录结构基于 docker 部署的目录结构。
+`/opt/data` 卷是所有 Hermes 状态的唯一数据来源。
+
+`/opt/hermes` 是安装好的应用树。它由 root 拥有，并且对运行时的 `hermes` 用户只读。
 
 ```
 /opt/data/                          ← HERMES_HOME
@@ -87,20 +90,17 @@ spec:
 ├── webhook_subscriptions.json      # Webhook 订阅
 ├── cache/                          # 缓存
 └── scripts/                        # Cron 脚本
+
+/opt/hermes
 ```
 
-### 2.3 容量建议
+### 2.3 POD 容量建议
 
-| 规模         | 建议容量   |                 |
-| ---------- | ------ | --------------- |
-| 开发/测试      | 20Gi   |                 |
-| 生产（少量用户）   | 50Gi   |                 |
-| 生产（多用户/高频） | 100Gi+ |                 |
-|            |        |                 |
-| 资源         | 最低     | 推荐              |
-| 内存         | 1 GB   | 2–4 GB          |
-| CPU        | 1 核    | 2 核             |
-| 磁盘（数据卷）    | 500 MB | 2+ GB（随会话/技能增长） |
+| 资源      | 最低     | 推荐              |
+| ------- | ------ | --------------- |
+| 内存      | 1 GB   | 2–4 GB          |
+| CPU     | 1 核    | 2 核             |
+| 磁盘（数据卷） | 500 MB | 2+ GB（随会话/技能增长） |
 
 ---
 
