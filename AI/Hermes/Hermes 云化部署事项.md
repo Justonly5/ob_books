@@ -1,6 +1,6 @@
 ## 前端适配
 - 前端创建实例的时候选择创建的实例类型，是 openclaw 还是 hermes。
-- 会话
+
 
 ## claw-admin 适配
 admin-server 适配创建 hermes 实例。
@@ -40,7 +40,7 @@ admin-server 适配创建 hermes 实例。
 
 
 
-## 技能
+## 技能管理
 
 
 
