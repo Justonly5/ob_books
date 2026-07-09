@@ -3,25 +3,27 @@
 ### chat
 聊天接口。
 
-
 ### session
 会话控制，涉及以下两个接口：
-- list
-- get
+- list：查询会话列表
+- get：
 
 ### model
 模型控制相关，涉及以下两个接口：
-- list
-- set
+- list：查询模型列表
+- set：设置模型
 
 ## charts 编写
 
 
 ## soul
 
+
 ## skills
 
+
 ## workspace
+
 
 ## 持久化目录
 
