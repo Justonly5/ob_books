@@ -13,13 +13,14 @@
 - list：查询模型列表
 - set：设置模型
 
-## charts 编写
+## charts 模版编写
 
 
 ## soul
 
 
-## skills
+## 技能
+
 
 
 ## workspace
