@@ -36,11 +36,11 @@
 
 ### 端口一览
 
-| 端口 | 协议 | 提供方 | 用途 |
-|------|------|--------|------|
-| 9119 | TCP + WS | Dashboard (s6 伴随服务) | Web UI + WebSocket `/api/ws` |
-| 8642 | TCP | Gateway (API Server) | OpenAI 兼容 HTTP API |
-| 8644 | TCP | Gateway (Webhook) | Webhook 接收（可选） |
+| 端口   | 协议       | 提供方                  | 用途                           |
+| ---- | -------- | -------------------- | ---------------------------- |
+| 9119 | TCP + WS | Dashboard (s6 伴随服务)  | Web UI + WebSocket `/api/ws` |
+| 8642 | TCP      | Gateway (API Server) | OpenAI 兼容 HTTP API           |
+| 8644 | TCP      | Gateway (Webhook)    | Webhook 接收（可选）               |
 
 ---
 

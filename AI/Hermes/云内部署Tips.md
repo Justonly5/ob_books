@@ -1,14 +1,16 @@
 ## chatbot 适配
 
 ### chat
-
+聊天接口。
 
 
 ### session
-
+会话控制，涉及以下两个接口：
+- list
+- get
 
 ### model
-
+模型控制相关，涉及以下两个接口：
 - list
 - set
 
