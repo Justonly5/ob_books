@@ -14,23 +14,23 @@
 │  │  Hermes Pod (replicas: 1)                                    │   │
 │  │                                                              │   │
 │  │  /init (s6-svscan, PID 1)                                    │   │
-│  │  ├── main-hermes (s6 占位服务)                                │  │
-│  │  ├── dashboard  (s6 服务) ── hermes dashboard :9119          │   │
+│  │  ├── main-hermes (s6 占位服务)                                │   │
+│  │  ├── dashboard  (s6 服务) ── hermes dashboard :9119           │   │
 │  │  └── 主程序 (CMD) ── hermes gateway run                       │   │
-│  │       ├── 消息平台适配器 (飞书/企微/Telegram...)               │   │
-│  │       ├── API Server :8642 (OpenAI 兼容)                       │   │
-│  │       ├── Webhook :8644                                        │   │
+│  │       ├── 消息平台适配器 (飞书/企微/Telegram...)                 │   │
+│  │       ├── API Server :8642 (OpenAI 兼容)                      │   │
+│  │       ├── Webhook :8644                                       │   │
 │  │       └── Cron 调度器                                          │   │
-│  │                                                                │   │
+│  │                                                               │   │
 │  │  本地存储: /opt/data                                           │   │
-│  │  ├── config.yaml / .env / auth.json                            │   │
+│  │  ├── config.yaml / .env / auth.json                          │   │
 │  │  ├── state.db (SQLite 会话)                                   │   │
 │  │  ├── skills/ / sessions/ / logs/ / cron/                     │   │
 │  └──────────────────────────────────────────────────────────────┘   │
-│                                                                      │
-│  sidecar 应用 ──WS──▶ hermes-dashboard:9119/api/ws                  │
-│  外部客户端 ──HTTP──▶ hermes-gateway:8642/v1/chat/completions       │
-│  消息平台   ──回调──▶ hermes-gateway:8644/webhooks/...              │
+│                                                                     │
+│  sidecar 应用 ──WS──▶ hermes-dashboard:9119/api/ws                   │
+│  外部客户端 ──HTTP──▶ hermes-gateway:8642/v1/chat/completions         │
+│  消息平台   ──回调──▶ hermes-gateway:8644/webhooks/...                │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
