@@ -44,6 +44,10 @@ volumeMounts:
 
 👉 表达的是：“把 config-vol 挂载到容器的 /etc/config 目录”
 
+name：指定从哪个 volumes 挂载数据
+mountPath：指定挂载到容器的目录
+subPath：指定的 volumes 下的子目录、子文件。
+
 **关键点**
 - 必须引用 volumes 里的 name
 - 可以挂多个位置
