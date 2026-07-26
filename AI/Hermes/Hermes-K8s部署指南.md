@@ -283,8 +283,9 @@ spec:
         app: hermes
     spec:
       securityContext:
-        runAsUser: 10000
-        runAsGroup: 10000
+        # container 级别上不能配置UID GID 
+        #runAsUser: 10000
+        #runAsGroup: 10000
         fsGroup: 10000
 
       containers:
@@ -294,7 +295,7 @@ spec:
           args: ["gateway", "run"]
 
           env:
-            # ── UID/GID ──
+            # ── UID/GID（可以根据实际情况配置用户组） ──
             - name: HERMES_UID
               value: "10000"
             - name: HERMES_GID
