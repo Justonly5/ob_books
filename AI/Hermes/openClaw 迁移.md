@@ -4,7 +4,6 @@ tags:
   - Hermes
   - OpenClaw
   - Migration
-  - CLI
 created: 2026-07-25
 ---
 
