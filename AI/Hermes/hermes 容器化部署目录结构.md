@@ -72,7 +72,65 @@ Hermes 容器化部署采用 **两层架构**：不可变的安装树与可变�
 | `memories/` | 持久化记忆存储（Hermes 跨会话记忆） | **必须持久化** |
 | `auth.json` | OAuth Token 等认证信息 | 建议持久化 |
 
-### 2.3 技能与扩展
+### 2.3 看板系统（Kanban）
+
+Hermes 内置多看板协作系统。看板数据位于**共享 Hermes 根目录**（即 profile 的父目录），所有 profile 共享同一个看板——这是跨 profile 协作的核心机制。
+
+#### 路径解析
+
+```
+<root>/                          ← kanban_home() = get_default_hermes_root()
+├── kanban.db                    ← 默认看板（default board）的 SQLite 数据库（向后兼容）
+├── kanban/
+│   ├── current                  ← 当前活跃看板 slug（`hermes kanban boards switch <slug>` 写入）
+│   ├── boards/                  ← 非默认看板的目录
+│   │   └── <slug>/
+│   │       ├── kanban.db        ← 该看板的 SQLite 数据库
+│   │       ├── board.json       ← 看板元数据
+│   │       ├── workspaces/      ← 每个任务的 scratch workspace
+│   │       ├── attachments/     ← 文件附件（每个任务一个子目录 `<task_id>/`）
+│   │       └── logs/            ← 每个任务的 worker 日志
+│   ├── workspaces/              ← 默认看板的 scratch workspace（向后兼容）
+│   ├── attachments/             ← 默认看板的文件附件（向后兼容）
+│   └── logs/                    ← 默认看板的 worker 日志（向后兼容）
+```
+
+#### 路径解析规则（来自 `kanban_db.py`）
+
+| 函数 | 默认看板 `default` | 其他看板 `<slug>` |
+|------|-------------------|-------------------|
+| `kanban_db_path()` | `<root>/kanban.db` | `<root>/kanban/boards/<slug>/kanban.db` |
+| `board_dir()` | `<root>/kanban/boards/default/` | `<root>/kanban/boards/<slug>/` |
+| `workspaces_root()` | `<root>/kanban/workspaces/` | `<root>/kanban/boards/<slug>/workspaces/` |
+| `attachments_root()` | `<root>/kanban/attachments/` | `<root>/kanban/boards/<slug>/attachments/` |
+| `worker_logs_dir()` | `<root>/kanban/logs/` | `<root>/kanban/boards/<slug>/logs/` |
+
+> **注意：** `default` 看板的 `kanban.db` 位于根目录（向后兼容），但其元数据目录（`board.json`、`workspaces/`、`logs/`）位于 `kanban/boards/default/`。其他看板的所有文件都在 `kanban/boards/<slug>/` 下。
+
+#### 环境变量覆盖
+
+| 变量 | 作用 |
+|------|------|
+| `HERMES_KANBAN_HOME` | 固定看板根目录（默认：`get_default_hermes_root()`） |
+| `HERMES_KANBAN_DB` | 直接固定 kanban.db 路径（最高优先级，用于 dispatcher→worker 传递） |
+| `HERMES_KANBAN_BOARD` | 当前活跃看板（环境变量级覆盖，用于 worker 锁定） |
+| `HERMES_KANBAN_WORKSPACES_ROOT` | 固定 workspaces 根目录 |
+| `HERMES_KANBAN_ATTACHMENTS_ROOT` | 固定 attachments 根目录 |
+
+#### 相关命令
+
+```bash
+# 查看看板状态
+hermes kanban status
+
+# 切换看板
+hermes kanban boards switch <slug>
+
+# 初始化看板（缺失时创建 kanban.db）
+hermes kanban init
+```
+
+### 2.4 技能与扩展
 
 | 路径 | 说明 |
 |------|------|
@@ -84,7 +142,7 @@ Hermes 容器化部署采用 **两层架构**：不可变的安装树与可变�
 | `plans/` | 执行计划（agent 编写的计划文件） |
 | `lazy-packages/` | 运行时 lazy install 重定向目标 |
 
-### 2.4 日志
+### 2.5 日志
 
 | 路径 | 说明 |
 |------|------|
@@ -93,13 +151,13 @@ Hermes 容器化部署采用 **两层架构**：不可变的安装树与可变�
 | `logs/gateways/<profile>/current` | 当前 profile 的 gateway 日志（s6-log 轮转，10 个 × 1 MB） |
 | `logs/container-boot.log` | 容器启动审计日志（记录 profile 恢复情况） |
 
-### 2.5 备份与恢复
+### 2.6 备份与恢复
 
 | 路径 | 说明 |
 |------|------|
 | `backups/` | 升级前自动备份、迁移前备份（`pre-migration-*.zip`），可通过 `hermes import` 恢复 |
 
-### 2.6 工作区与工具
+### 2.7 工作区与工具
 
 | 路径 | 说明 |
 |------|------|
@@ -108,7 +166,7 @@ Hermes 容器化部署采用 **两层架构**：不可变的安装树与可变�
 | `pairing/` | 设备配对信息 |
 | `platforms/pairing/` | 平台级配对信息 |
 
-### 2.7 多 Profile 支持
+### 2.8 多 Profile 支持
 
 | 路径 | 说明 |
 |------|------|
@@ -158,6 +216,7 @@ as_hermes mkdir -p \
 | 优先级 | 路径 | 原因 |
 |--------|------|------|
 | **必须** | `state.db` | 所有会话状态、记忆索引 |
+| **必须** | `kanban.db` (+ `kanban/`) | 看板数据（任务、workspace、附件） |
 | **必须** | `memories/` | 跨会话记忆 |
 | **必须** | `skills/` | 安装的技能 |
 | **必须** | `auth.json` | OAuth 凭证 |
