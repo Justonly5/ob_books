@@ -73,6 +73,7 @@ spec:
 
 ```
 /opt/data/                          ← HERMES_HOME
+├── SOUL.MD
 ├── config.yaml                     # 主配置
 ├── .env                            # API Keys / 环境变量
 ├── auth.json                       # OAuth token + credential pools
