@@ -65,6 +65,8 @@ metadata:
 
 变量可以保存任何对象。
 
+Helm 中 `$变量` 的作用域不是整个 `_helpers.tpl` 文件，而是它所在的模板（`define`）或控制块（`if`、`range`、`with`）的作用域。
+
 ## 条件判断
 ### IF
 
