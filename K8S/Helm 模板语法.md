@@ -118,7 +118,11 @@ INFO
 这里：`.` 已经变成 `.Values.image`
 
 ### include
-配合 `_helpers.tpl`。
+配合 `_helpers.tpl`。`include` 返回的是字符串，如果要返回对象使用 
+
+```YAML
+{{ include "demo.labels" . | fromYaml }}
+```
 
 **`_helpers.tpl`（或者 `_xxx.tpl`）里面定义的不是变量，而是"命名模板（Named Template）"。**
 
@@ -126,11 +130,19 @@ INFO
 
 定义：
 ```YAML
+## 定义模板，在 deployment 里可以通过 {{ include "demo.fullname" . }} 引用
 {{ define "demo.fullname" }}
 
 {{ .Release.Name }}
 
 {{ end }}
+
+---
+## 定义变量 只能在demo.labels里使用
+{{- define "demo.labels" -}} 
+{{- $app := .Chart.Name }} 
+app: {{ $app }} 
+{{- end -}}
 ```
 
 调用：
