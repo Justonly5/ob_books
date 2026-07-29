@@ -151,3 +151,71 @@ metadata:
   name: {{ include "demo.fullname" . }}
 ```
 
+### 常用函数
+```YAML
+
+upper
+lower
+trim
+replace
+
+---
+# 日期
+now
+date
+
+---
+# 列表
+list
+append
+concat
+
+--- 
+# 字典
+dict
+
+---
+# 对象
+toYaml
+toJson
+fromJson
+```
+
+### 空白控制
+
+```YAML
+## - 表示去掉左边的空白
+{{- if .Values.enabled }}
+## - 表示去掉右边的空白
+{{ end -}}
+```
+
+###  indent 与 nindent
+| 函数      | 作用      |     |
+| ------- | ------- | --- |
+| indent  | 缩进，不换行  |     |
+| nindent | 先换行，再缩进 | 推荐  |
+### quote
+
+```YAML
+{{ .Values.tag | quote }}
+## "1.0"
+
+```
+
+### default
+```YAML
+{{ .Values.port | default 8080 }}
+```
+
+### required
+
+```YAML
+{{ required "db.password不能为空" .Values.db.password }}
+```
+
+### 管道
+
+```YAML
+{{ .Values.name | upper | quote }}
+```
