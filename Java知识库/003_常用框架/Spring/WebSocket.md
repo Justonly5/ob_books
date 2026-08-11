@@ -480,3 +480,49 @@ public class SpringWebSocketClient
     }
 }
 ```
+
+### 注册消息处理器
+
+```JAVA
+@Component
+@RequiredArgsConstructor
+public class MessageHandlerRegister {
+
+    private final SpringWebSocketClient wsClient;
+
+    @PostConstruct
+    public void register() {
+        // 注册不同类型消息的处理器
+        wsClient.registerHandler("CHAT",
+            msg -> handleChat(msg));
+
+        wsClient.registerHandler("NOTICE",
+            msg -> handleNotice(msg));
+
+        wsClient.registerHandler("ORDER_UPDATE",
+            msg -> handleOrderUpdate(msg));
+    }
+
+    private void handleChat(JsonNode msg) {
+        log.info("聊天: {}", msg.path("content").asText());
+    }
+
+    private void handleNotice(JsonNode msg) {
+        log.info("通知: {}", msg.path("content").asText());
+    }
+
+    private void handleOrderUpdate(JsonNode msg) {
+        log.info("订单更新: {}", msg);
+    }
+}
+```
+
+### application.yml
+
+```YAML
+ws:
+  server:
+    url: ws://localhost:8080/ws/chat
+    token: ${WS_TOKEN}
+```
+
