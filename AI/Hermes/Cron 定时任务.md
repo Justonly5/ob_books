@@ -7,7 +7,7 @@
 /cron add 30m "Remind me to check the build"
 ```
 
->>>>>  /cron is only available in the terminal interface.
+>  /cron is only available in the terminal interface.
 
 
 ### 独立的 cli
