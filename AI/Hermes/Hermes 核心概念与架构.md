@@ -164,6 +164,9 @@ hermes config set sessions.retention_days 30
 
 **数据库文件**：`~/.hermes/state.db`（SQLite，WAL 模式）
 
+`~/.hermes/profiles/{profile_name}/state.db`
+
+
 ### 完整表清单
 
 | 表名 | 用途 | 备注 |
