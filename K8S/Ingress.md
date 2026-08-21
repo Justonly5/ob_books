@@ -67,6 +67,7 @@ tls:
 
 > --controller-class 通过这个指定自己的唯一身份 id
 > 推荐格式：`<domain>/<controller-name>`
+> ingress Controller 本质也是 pod 资源，可以以 deployment、或者 DaemonSet 部署
 ## **工作原理**
 
 Ingress Controller 会：
