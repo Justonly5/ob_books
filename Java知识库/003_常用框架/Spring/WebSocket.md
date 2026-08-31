@@ -67,16 +67,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         broadcast(payload, session.getId());
     }
 	// ③ 收到二进制消息
-@Override 
-protected void handleBinaryMessage( WebSocketSession session, BinaryMessage message) throws Exception { 
-byte[] data = message.getPayload().array(); 
-	// 处理二进制数据... } 
+	@Override 
+	protected void handleBinaryMessage( WebSocketSession session, 
+	BinaryMessage message) throws Exception { 
+		byte[] data = message.getPayload().array(); 
+		// 处理二进制数据... 
+	} 
 	// ④ 收到 Pong 心跳响应 
 	@Override 
-	protected void handlePongMessage( WebSocketSession session, PongMessage message) throws Exception { 
-	log.debug("心跳 Pong: {}", session.getId()); 
-}
+	protected void handlePongMessage( WebSocketSession session, 
+	PongMessage message) throws Exception { 
+		log.debug("心跳 Pong: {}", session.getId()); 
+	}
 	
+	// ⑤ 连接关闭
     @Override
     public void afterConnectionClosed(WebSocketSession session,
             CloseStatus status) throws Exception {
@@ -84,7 +88,8 @@ byte[] data = message.getPayload().array();
         log.info("连接关闭: sessionId={}, status={}",
             session.getId(), status);
     }
-
+	
+	// ⑥ 传输异常
     @Override
     public void handleTransportError(WebSocketSession session,
             Throwable exception) throws Exception {
@@ -125,6 +130,57 @@ byte[] data = message.getPayload().array();
         return (String) session.getAttributes()
             .getOrDefault("username", "anonymous");
     }
+}
+```
+
+
+## 握手拦截器（认证）
+```JAVA
+public class AuthInterceptor implements HandshakeInterceptor {
+
+    @Override
+    public boolean beforeHandshake(
+            ServerHttpRequest request,
+            ServerHttpResponse response,
+            WebSocketHandler wsHandler,
+            Map<String, Object> attributes) {
+
+        // WebSocket 不支持自定义 Header
+        // Token 通过 URL 参数传递
+        if (request instanceof ServletServerHttpRequest req) {
+            String token = req.getServletRequest()
+                .getParameter("token");
+
+            if (token == null || !validateToken(token)) {
+                return false;  // 拒绝握手
+            }
+
+            // 把用户信息存入 session attributes
+            attributes.put("username", extractUser(token));
+            attributes.put("userId", extractUserId(token));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void afterHandshake(...) {}
+}
+```
+## 心跳保活
+```JAVA
+// 定时向所有客户端发 Ping
+@Scheduled(fixedDelay = 30000)
+public void heartbeat() {
+    sessions.values().stream()
+        .filter(WebSocketSession::isOpen)
+        .forEach(session -> {
+            try {
+                session.sendMessage(new PingMessage());
+            } catch (IOException e) {
+                sessions.remove(session.getId());
+            }
+        });
 }
 ```
 
