@@ -1,4 +1,18 @@
+![[Pasted image 20260831163744.png]]
+
+# 核心概念
+
+WebSocket 是全双工通信协议，通过 HTTP Upgrade 握手建立持久连接后，客户端和服务端可以随时互相发消息，不需要每次都建立新连接。Spring Boot 提供了两套 WebSocket 编程模型。
+
 # 原生 webSocket 应用
+
+## 依赖
+```XML
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-websocket</artifactId>
+</dependency>
+```
 ## 配置
 
 ```JAVA
@@ -18,7 +32,7 @@ public class RawWebSocketConfig implements WebSocketConfigurer {
 }
 ```
 
-## Handler
+## Handler 
 
 ```JAVA
 @Component
@@ -29,6 +43,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final ConcurrentHashMap<String, WebSocketSession>
         sessions = new ConcurrentHashMap<>();
 
+	// ① 连接建立
     @Override
     public void afterConnectionEstablished(
             WebSocketSession session) throws Exception {
@@ -41,7 +56,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         session.sendMessage(new TextMessage(
             "{\"type\":\"WELCOME\",\"content\":\"连接成功\"}"));
     }
-
+	// ② 收到文本消息
     @Override
     protected void handleTextMessage(WebSocketSession session,
             TextMessage message) throws Exception {
@@ -51,7 +66,17 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         // 广播给所有人
         broadcast(payload, session.getId());
     }
-
+	// ③ 收到二进制消息
+@Override 
+protected void handleBinaryMessage( WebSocketSession session, BinaryMessage message) throws Exception { 
+byte[] data = message.getPayload().array(); 
+	// 处理二进制数据... } 
+	// ④ 收到 Pong 心跳响应 
+	@Override 
+	protected void handlePongMessage( WebSocketSession session, PongMessage message) throws Exception { 
+	log.debug("心跳 Pong: {}", session.getId()); 
+}
+	
     @Override
     public void afterConnectionClosed(WebSocketSession session,
             CloseStatus status) throws Exception {
