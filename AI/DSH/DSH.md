@@ -7,3 +7,19 @@ Agent Sphere
 云端多用户，共享资源池
 
 
+AGENT LOOP 
+
+SASS
+
+
+插件固化
+
+技能
+
+记忆
+
+存储
+
+
+
+
