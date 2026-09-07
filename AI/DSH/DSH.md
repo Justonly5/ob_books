@@ -61,3 +61,10 @@ Sandbox 并不等于 Docker，SandBox 是一个**安全隔离模型**。而 Dock
 
 #### Filesystem
 
+#### Network Sandbox
+限制 Agent 能访问哪些网络。
+#### Process Sandbox
+
+限制 Agent 能运行什么。资源（cpu、memory等）使用限制
+
+#### Credential Sandbox
