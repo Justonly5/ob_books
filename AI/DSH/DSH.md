@@ -44,3 +44,5 @@ POC 可行性
 智能体需要执行代码、读取文件、安装依赖、访问网络等。
 
 OpenSandBox-底层基于 Docker 
+https://github.com/opensandbox-group/OpenSandbox
+https://github.com/TencentCloud/CubeSandbox
