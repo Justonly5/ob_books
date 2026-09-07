@@ -38,3 +38,9 @@ openSandbox
 POC 可行性
 组件清单、功能、接口。
 
+
+
+## 安全沙箱
+智能体需要执行代码、读取文件、安装依赖、访问网络等。
+
+OpenSandBox-底层基于 Docker 
