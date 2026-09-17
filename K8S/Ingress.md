@@ -63,7 +63,7 @@ tls:
 👉 替代多个 NodePort / LoadBalancer
 👉 提供一个统一的入口网关
 
-# IngressController
+# 二、IngressController
 
 > --controller-class 通过这个指定自己的唯一身份 id
 > 推荐格式：`<domain>/<controller-name>`
@@ -91,7 +91,7 @@ Ingress Controller 会：
 - 最广泛使用
 
 
-# IngressClass
+# 三、IngressClass
 > ✅ **IngressClass 是一个标准资源，用来标识“这条 Ingress 规则应该由哪一类 Controller 处理”**
 
 - 属于 networking.k8s.io/v1
@@ -118,7 +118,7 @@ spec:
     kind: IngressParameters
     name: nginx-params
 ```
-# Ingress 和 Controller 绑定关系
+# 四、Ingress 和 Controller 绑定关系
 
 Ingress Controller 主动 watch Ingress → 根据规则筛选“我该处理哪些 Ingress”
 
@@ -176,3 +176,4 @@ args:
   # - --watch-ingress-without-class=true   
   # 👈 关键：是否匹配 annotation 没有指定 ingress.class 的 ingress。
 ```
+
