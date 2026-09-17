@@ -177,3 +177,4 @@ args:
   # 👈 关键：是否匹配 annotation 没有指定 ingress.class 的 ingress。
 ```
 
+# 五、rewrite 规则
