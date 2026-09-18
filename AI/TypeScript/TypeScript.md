@@ -25,3 +25,30 @@ TypeScript = JavaScript + 静态类型系统 + 编译期检查，在开发编译
 **非常关键的区别**：
 > **Java 是运行时强类型语言；TypeScript 的类型系统主要是编译期的，最终运行的是 JavaScript。**
 
+
+TypeScript 项目的核心文件：`tsconfig.json`
+一个典型项目：
+```
+my-project/
+├── src/
+│   ├── index.ts
+│   ├── agent.ts
+│   └── message.ts
+├── package.json
+├── tsconfig.json
+└── node_modules/
+```
+`tsconfig.json`：
+```json
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "outDir": "dist",
+        "sourceMap": true
+    },
+    "include": ["src/**/*.ts"]
+}
+```
