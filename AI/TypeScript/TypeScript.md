@@ -1,3 +1,6 @@
+https://ts.xcatliu.com/  TypeScript 入门
+https://zhongsp.github.io/TypeScript/ TypeScript 使用指南
+
 TypeScript = JavaScript + 静态类型系统 + 编译期检查，在开发编译期间会进行类型校验，但是实际编译后类型都会被去除，TypeScript 的类型系统主要存在于开发/编译阶段，它最大的价值是：
 **把很多原本运行时才可能暴露的问题，提前到开发/编译阶段发现。**
 
@@ -32,6 +35,7 @@ TypeScript 项目的核心文件：`tsconfig.json`
 my-project/
 ├── src/
 │   ├── index.ts
+
 │   ├── agent.ts
 │   └── message.ts
 ├── package.json
