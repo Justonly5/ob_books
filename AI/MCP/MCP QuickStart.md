@@ -1,7 +1,7 @@
 https://docs.spring.io/spring-ai/reference/api/mcp/mcp-server-boot-starter-docs.html
 https://modelcontextprotocol.io/docs/develop/build-server#java
 
-[MCP]()
+[MCP-For-Beginners](github.com/zemthos/mcp-for-beginners)
 
 # 服务端开发
 ## Python
