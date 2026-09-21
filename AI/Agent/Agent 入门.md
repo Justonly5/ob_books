@@ -18,3 +18,4 @@ planAndExecute
 ## Agent Loop
 智能体并非一次性完成任务，而是通过一个持续的循环与环境进行交互，这个核心机制被称为 **智能体循环 (Agent Loop)**。
 
+Harness 
