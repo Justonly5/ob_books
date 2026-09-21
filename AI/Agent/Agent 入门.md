@@ -21,11 +21,15 @@ planAndExecute
 Harness Engineering
 Harness 驱动和分析智能体的“执行脚手架”，它决定模型合适被调用、调用什么工具、如何评估结果、何时停下。
 
+https://github.com/RyanAlberts/best-of-Agent-Harnesses
+
 提示词工程 --> 解决模型听不懂                 模型不是万能的，
 上下文工程 --> 解决大模型看到什么东西   提示词爆炸💥
     skill 渐进式披露
 Harness     -->  
      工具治理、编排、验证&评估、治理&安全
+
+
 
 Agent 的一些问题：
 总是想一步到位，在一个会话里解决所有问题
