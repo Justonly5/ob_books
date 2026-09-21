@@ -23,6 +23,7 @@ Harness 驱动和分析智能体的“执行脚手架”，它决定模型合适
 
 https://github.com/RyanAlberts/best-of-Agent-Harnesses
 
+
 提示词工程 --> 解决模型听不懂                 模型不是万能的，
 上下文工程 --> 解决大模型看到什么东西   提示词爆炸💥
     skill 渐进式披露
@@ -35,3 +36,7 @@ Agent 的一些问题：
 总是想一步到位，在一个会话里解决所有问题
 过早的宣布胜利
 过分依赖自己已有的经验
+
+
+更可靠的主播助理：淘宝主播Agent的Harness工程实战
+https://news.qq.com/rain/a/20260617A02CIK00
