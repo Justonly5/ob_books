@@ -179,3 +179,41 @@ args:
 
 # 五、rewrite 规则
 
+## 最常见的写法：去掉 URL 前缀
+
+|客户端请求|后端实际收到|
+|---|---|
+|`/api/user`|`/user`|
+|`/api/user/123`|`/user/123`|
+|`/api/order/list`|`/order/list`|
+
+对应的 Ingress YAML：
+```YAML
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: api-service
+                port:
+                  number: 8080
+
+```
+
+这里最关键的是三个配置：
+- `use-regex: "true"`：启用正则路径匹配。
+- `path: /api(/|$)(.*)`：匹配 `/api` 前缀及其后续路径。
+- `rewrite-target: /$2`：将请求路径改写为第二个捕获组。
