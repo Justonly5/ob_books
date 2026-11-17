@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e3f3b">
+<title>厦门 → 雁荡山 · 5 日自驾路书</title>
+<style>
+  :root{
+    --ink:#101c22; --ink-2:#465a64; --ink-3:#8397a1;
+    --bg:#f2f0ea; --card:#fffdf9; --line:#e7e3d9;
+    --jade:#0f766e; --jade-d:#0b4f4a; --jade-l:#e4f2ef;
+    --clay:#b4532a; --clay-l:#fbeade;
+    --gold:#a5761b; --gold-l:#fbf2da;
+    --blue:#2f5f96; --blue-l:#e8eff7;
+    --r:20px;
+    --sh:0 1px 2px rgba(16,28,34,.06), 0 10px 30px -12px rgba(16,28,34,.18);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    font-size:16px; line-height:1.72; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:0 18px}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative; overflow:hidden; color:#fff; text-align:center;
+    background:linear-gradient(170deg,#08292a 0%,#0d423f 40%,#12675f 78%,#17786d 100%);
+    padding:calc(44px + env(safe-area-inset-top)) 20px 0;
+    border-radius:0 0 30px 30px;
+  }
+  .hero .sun{
+    position:absolute; width:190px; height:190px; border-radius:50%;
+    right:-40px; top:6px; opacity:.5;
+    background:radial-gradient(circle at 50% 50%, #ffd9a3 0%, rgba(255,196,138,.35) 45%, rgba(255,196,138,0) 70%);
+    filter:blur(2px);
+  }
+  .hero-inner{position:relative; z-index:3; padding-bottom:98px}
+  .brand{
+    font-size:11px; letter-spacing:.34em; text-transform:uppercase;
+    opacity:.72; margin-bottom:16px;
+  }
+  h1{
+    margin:0 0 10px; font-size:29px; line-height:1.32; font-weight:700; letter-spacing:.02em;
+    text-shadow:0 2px 18px rgba(0,0,0,.18);
+  }
+  h1 .arrow{display:inline-block; transform:translateY(-1px); opacity:.85; font-weight:400}
+  .sub{font-size:14px; opacity:.88; letter-spacing:.04em; margin-bottom:22px}
+  .pills{display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
+  .pill{
+    font-size:12.5px; padding:6px 14px; border-radius:999px;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
+    backdrop-filter:blur(6px);
+  }
+  .pill b{font-weight:650}
+  .pill span{opacity:.72; margin-right:4px}
+  /* layered ridge illustration */
+  .ridge{position:absolute; left:0; right:0; bottom:-2px; z-index:2; display:block; width:100%; height:auto}
+  .ridge .l1{fill:rgba(6,40,38,.55)}
+  .ridge .l2{fill:rgba(4,30,29,.75)}
+  .ridge .l3{fill:#f2f0ea}
+
+  /* ============ NAV ============ */
+  nav{
+    position:sticky; top:0; z-index:40;
+    background:rgba(242,240,234,.86); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .scroll{
+    max-width:760px; margin:0 auto; display:flex; gap:6px; overflow-x:auto;
+    padding:10px 18px; scrollbar-width:none;
+  }
+  nav .scroll::-webkit-scrollbar{display:none}
+  nav a{
+    flex:0 0 auto; font-size:13px; text-decoration:none; color:var(--ink-2);
+    padding:5px 13px; border-radius:999px; border:1px solid transparent; white-space:nowrap;
+  }
+  nav a:active{background:#fff}
+
+  /* ============ SECTION ============ */
+  section{scroll-margin-top:64px}
+  .sec-h{display:flex; align-items:baseline; gap:10px; margin:34px 2px 12px}
+  .sec-h .idx{
+    font-size:11px; font-weight:700; letter-spacing:.14em; color:var(--jade);
+    background:var(--jade-l); padding:2px 8px; border-radius:6px;
+  }
+  .sec-h h2{font-size:18px; margin:0; font-weight:650; letter-spacing:.01em}
+  .sec-h .en{font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3); margin-left:auto}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+    box-shadow:var(--sh); padding:20px 18px; margin-bottom:16px;
+  }
+
+  /* ============ ROUTE MAP ============ */
+  .route{padding:6px 4px 0}
+  .route svg{width:100%; max-width:420px; height:auto; display:block; margin:0 auto}
+  .route .lbl{font-size:11.5px; fill:var(--ink-3); font-family:inherit}
+  .route .lbl-b{font-size:15px; fill:var(--ink); font-weight:700; font-family:inherit; letter-spacing:.02em}
+  .route .kmlbl{font-size:11px; fill:var(--jade); font-weight:700; font-family:inherit}
+  .route-legend{
+    display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
+    font-size:12px; color:var(--ink-3); margin-top:4px;
+  }
+  .route-legend i{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px}
+
+  /* ============ DAYS ============ */
+  .day{
+    position:relative; background:var(--card); border:1px solid var(--line);
+    border-radius:var(--r); box-shadow:var(--sh); padding:0; margin-bottom:16px; overflow:hidden;
+  }
+  .day-top{display:flex; align-items:center; gap:13px; padding:16px 18px 14px}
+  .badge{
+    flex:0 0 auto; width:50px; height:50px; border-radius:16px;
+    background:var(--jade-l); color:var(--jade-d);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1;
+  }
+  .badge em{font-style:normal; font-size:9px; letter-spacing:.12em; opacity:.7}
+  .badge b{font-size:20px; margin-top:4px; font-weight:700}
+  .day-h{flex:1; min-width:0}
+  .day-h .t{font-size:16.5px; font-weight:650; letter-spacing:.01em}
+  .day-h .m{font-size:12.5px; color:var(--ink-3); margin-top:3px}
+  .day-h .m b{color:var(--clay); font-weight:650}
+  .day-body{padding:0 18px 18px}
+
+  ul.tl{list-style:none; margin:0; padding:4px 0 0}
+  ul.tl li{position:relative; padding:0 0 15px 76px; font-size:15px}
+  ul.tl li:last-child{padding-bottom:0}
+  ul.tl li::before{
+    content:""; position:absolute; left:53px; top:10px; bottom:-3px; width:1.5px; background:var(--line);
+  }
+  ul.tl li:last-child::before{display:none}
+  .tt{
+    position:absolute; left:0; top:2px; width:44px; text-align:right;
+    font-size:12px; font-weight:700; color:var(--jade); font-variant-numeric:tabular-nums;
+  }
+  .tt::after{
+    content:""; position:absolute; right:-9px; top:6.5px; width:7px; height:7px;
+    border-radius:50%; background:#fff; border:2px solid var(--jade);
+  }
+  .tl .n{display:block; color:var(--ink-2); font-size:13.5px; margin-top:2px}
+
+  .tags{display:flex; flex-wrap:wrap; gap:7px; margin-top:15px}
+  .tag{
+    font-size:12px; padding:5px 11px; border-radius:8px;
+    background:var(--bg); color:var(--ink-2); border:1px solid var(--line);
+  }
+  .tag.money{background:var(--gold-l); color:var(--gold); border-color:#efe0bb; font-weight:600}
+  .tag.car{background:var(--blue-l); color:var(--blue); border-color:#d8e4f2; font-weight:600}
+  .tag.tk{background:var(--clay-l); color:var(--clay); border-color:#f4d9c7; font-weight:600}
+
+  .note{
+    margin-top:15px; padding:12px 14px; border-radius:12px; font-size:13.5px;
+    background:var(--jade-l); color:#0a4b46; border-left:3px solid var(--jade);
+  }
+  .note.warn{background:var(--gold-l); color:#6d520a; border-left-color:var(--gold)}
+
+  /* ============ OPTIONS ============ */
+  .opts{display:grid; gap:12px}
+  .opt{border:1px solid var(--line); border-radius:16px; padding:15px 16px; background:#fcfbf7}
+  .opt.hl{border-color:#cfe3de; background:linear-gradient(180deg,#f4faf8,#fcfbf7)}
+  .opt .o-tag{
+    display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.12em;
+    padding:2px 9px; border-radius:6px; margin-bottom:8px;
+    background:var(--jade-l); color:var(--jade-d);
+  }
+  .opt.alt .o-tag{background:var(--blue-l); color:var(--blue)}
+  .opt h4{margin:0 0 6px; font-size:15.5px; font-weight:650}
+  .opt p{margin:0; font-size:13.8px; color:var(--ink-2); line-height:1.66}
+  .opt p b{color:var(--ink)}
+
+  /* ============ TABLE ============ */
+  .tbl{width:100%; border-collapse:collapse; font-size:14px}
+  .tbl th{
+    font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3);
+    text-align:left; padding:0 0 9px; border-bottom:1px solid var(--line); font-weight:600;
+  }
+  .tbl td{padding:11px 0; border-bottom:1px solid #f1eee6; vertical-align:top}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td.name{font-weight:600; width:88px}
+  .tbl td.price{
+    width:78px; color:var(--clay); font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap;
+  }
+  .tbl td.desc{color:var(--ink-2); font-size:13.2px}
+  .star{font-size:10px; background:var(--clay-l); color:var(--clay); padding:1px 6px; border-radius:5px; margin-left:5px; font-weight:700; letter-spacing:.06em; vertical-align:2px}
+
+  /* ============ BUDGET ============ */
+  .bar{margin-bottom:14px}
+  .bar:last-of-type{margin-bottom:0}
+  .bar-top{display:flex; justify-content:space-between; align-items:baseline; font-size:13.8px; margin-bottom:6px}
+  .bar-top .v{font-variant-numeric:tabular-nums; font-weight:650; color:var(--ink)}
+  .track{height:7px; border-radius:99px; background:#eeece5; overflow:hidden}
+  .fill{height:100%; border-radius:99px; background:linear-gradient(90deg,#128b7f,#0f766e)}
+  .fill.b2{background:linear-gradient(90deg,#c9764a,#b4532a)}
+  .fill.b3{background:linear-gradient(90deg,#4a7bb0,#2f5f96)}
+  .fill.b4{background:linear-gradient(90deg,#c19a2e,#a5761b)}
+  .fill.b5{background:linear-gradient(90deg,#7a8b95,#5c6f7a)}
+  .total{
+    margin-top:18px; border-radius:16px; padding:16px 18px; color:#fff;
+    background:linear-gradient(135deg,#0d423f 0%,#12675f 60%,#158579 100%);
+    box-shadow:0 12px 26px -14px rgba(15,118,110,.9);
+  }
+  .total .k{font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; opacity:.8}
+  .total .v{font-size:24px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:4px; letter-spacing:.01em}
+  .total .u{font-size:12px; opacity:.72; margin-top:2px}
+
+  /* ============ TIPS ============ */
+  .tip{display:flex; gap:13px; padding:14px 0; border-bottom:1px dashed var(--line)}
+  .tip:last-child{border-bottom:none; padding-bottom:0}
+  .tip:first-of-type{padding-top:2px}
+  .tip .i{
+    flex:0 0 auto; width:28px; height:28px; border-radius:10px;
+    background:var(--clay-l); color:var(--clay);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;
+  }
+  .tip .c{font-size:14px; line-height:1.68; color:var(--ink-2)}
+  .tip .c b{color:var(--ink); display:block; margin-bottom:2px; font-weight:650}
+
+  /* ============ FOOTER ============ */
+  footer{
+    text-align:center; padding:26px 18px 40px; margin-top:30px;
+    border-top:1px solid var(--line); color:var(--ink-3); font-size:12px; line-height:2;
+  }
+  footer .mark{font-size:11px; letter-spacing:.3em; text-transform:uppercase; opacity:.7; display:block; margin-bottom:8px}
+
+  @media (max-width:400px){
+    h1{font-size:25px}
+    .hero-inner{padding-bottom:92px}
+    ul.tl li{padding-left:68px}
+    ul.tl li::before{left:47px}
+    .tt{width:38px; font-size:11.5px}
+    .tbl td.name{width:76px}
+    .total .v{font-size:22px}
+  }
+  @media print{
+    nav{display:none} body{background:#fff}
+    .card,.day{box-shadow:none; break-inside:avoid}
+    .hero{border-radius:0}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="sun"></div>
+  <div class="hero-inner">
+    <div class="brand">Road Book · 2026 冬</div>
+    <h1>厦门 <span class="arrow">→</span> 雁荡山</h1>
+    <div class="sub">五天自驾路书 · 11.25 周三 出发 · 11.29 周日 返</div>
+    <div class="pills">
+      <div class="pill"><span>单程</span><b>600 km</b><span>·</span><span>全程</span><b>1200 km</b></div>
+      <div class="pill"><span>2 人预算</span><b>≈ 4,500 元</b></div>
+    </div>
+  </div>
+  <svg class="ridge" viewBox="0 0 780 160" preserveAspectRatio="none" aria-hidden="true">
+    <path class="l1" d="M0,112 C50,96 96,70 150,78 C200,86 226,108 274,104 C322,100 344,66 396,62 C446,58 470,92 520,96 C570,100 596,74 648,70 C700,66 726,92 780,100 L780,160 L0,160 Z"/>
+    <path class="l2" d="M0,132 C64,122 108,104 168,110 C228,116 268,134 330,130 C392,126 424,106 484,108 C544,110 576,132 636,132 C696,132 726,120 780,124 L780,160 L0,160 Z"/>
+    <path class="l3" d="M0,148 C140,142 240,154 380,150 C520,146 640,156 780,150 L780,160 L0,160 Z"/>
+  </svg>
+</header>
+
+<nav>
+  <div class="scroll">
+    <a href="#route">路线</a>
+    <a href="#days">逐日行程</a>
+    <a href="#tickets">门票</a>
+    <a href="#budget">预算</a>
+    <a href="#tips">贴士</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ================= ROUTE ================= -->
+  <section id="route">
+    <div class="sec-h"><span class="idx">01</span><h2>路线总览</h2><span class="en">Route</span></div>
+    <div class="card route">
+      <svg viewBox="0 0 360 176" aria-label="路线示意图">
+        <path d="M40,80 L310,80" fill="none" stroke="#d9e5e1" stroke-width="3" stroke-linecap="round"/>
+        <path d="M175,80 L310,80" fill="none" stroke="#0f766e" stroke-width="2.4" stroke-dasharray="7 7" stroke-linecap="round"/>
+        <path d="M310,96 L310,124" stroke="#bcd2e2" stroke-width="1.6" stroke-dasharray="3 4"/>
+        <!-- 厦门 -->
+        <circle cx="40" cy="80" r="9" fill="#fff" stroke="#0f766e" stroke-width="3.2"/>
+        <circle cx="40" cy="80" r="3" fill="#0f766e"/>
+        <text class="lbl-b" x="40" y="56" text-anchor="middle">厦门</text>
+        <text class="lbl" x="40" y="106" text-anchor="middle">Day 1 出发</text>
+        <!-- 霞浦 -->
+        <circle cx="175" cy="80" r="9" fill="#fff" stroke="#b4532a" stroke-width="3.2"/>
+        <circle cx="175" cy="80" r="3" fill="#b4532a"/>
+        <text class="lbl-b" x="175" y="56" text-anchor="middle">霞浦</text>
+        <text class="lbl" x="175" y="106" text-anchor="middle">宿 1 晚 · 滩涂日落</text>
+        <text class="kmlbl" x="107" y="74" text-anchor="middle">418 km · 6h</text>
+        <!-- 雁荡山 -->
+        <circle cx="310" cy="80" r="11" fill="#0f766e"/>
+        <circle cx="310" cy="80" r="3.8" fill="#fff"/>
+        <text class="lbl-b" x="310" y="56" text-anchor="middle">雁荡山</text>
+        <text class="lbl" x="310" y="106" text-anchor="middle">Day 2–4</text>
+        <text class="kmlbl" x="242" y="74" text-anchor="middle">190 km · 2.5h</text>
+        <!-- 楠溪江支线 -->
+        <circle cx="310" cy="131" r="6.5" fill="#fff" stroke="#2f5f96" stroke-width="2.4" stroke-dasharray="3 3"/>
+        <text class="lbl" x="310" y="158" text-anchor="middle">楠溪江 · 可选</text>
+      </svg>
+      <div class="route-legend">
+        <span><i style="background:#0f766e"></i>主线</span>
+        <span><i style="background:#b4532a"></i>中途过夜</span>
+        <span><i style="background:#2f5f96"></i>可选支线</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DAYS ================= -->
+  <section id="days">
+    <div class="sec-h"><span class="idx">02</span><h2>逐日行程</h2><span class="en">Itinerary</span></div>
+
+    <!-- D1 -->
+    <article class="day">
+      <div class="day-top">
+        <div class="badge"><em>DAY</em><b>1</b></div>
+        <div class="day-h">
+          <div class="t">厦门 → 霞浦</div>
+          <div class="m">11/25 周三 · <b>418 km / 约 6 小时</b></div>
+        </div>
+      </div>
+      <div class="day-body">
+        <ul class="tl">
+          <li><span class="tt">07:00</span>厦门出发<span class="n">G15 沈海高速北上，泉州、福州、宁德一路不停</span></li>
+          <li><span class="tt">10:30</span>福州 / 连江服务区<span class="n">休息 20 分钟，加满油</span></li>
+          <li><span class="tt">14:00</span>抵霞浦三沙 · 东壁村<span class="n">办入住，先睡一觉</span></li>
+          <li><span class="tt">16:30</span>东壁观景台看日落<span class="n">11 月是紫菜季，滩涂光影全年最好</span></li>
+          <li><span class="tt">18:30</span>三沙海鲜晚饭<span class="n">紫菜、海蛎、望潮，不贵</span></li>
+        </ul>
+        <div class="tags">
+          <span class="tag car">418 km · 6h</span>
+          <span class="tag">宿 三沙 / 东壁</span>
+          <span class="tag money">≈ 350 元油费过路</span>
+        </div>
+        <div class="note"><b>为什么不第一天硬开 600 公里？</b><br>后面两天要爬山，第一天把体力留给路上，第二天才有精神看夜景。</div>
+      </div>
+    </article>
+
+    <!-- D2 -->
+    <article class="day">
+      <div class="day-top">
+        <div class="badge"><em>DAY</em><b>2</b></div>
+        <div class="day-h">
+          <div class="t">霞浦 → 雁荡山 · 灵峰日夜景</div>
+          <div class="m">11/26 周四 · <b>约 190 km / 2.5 小时</b></div>
+        </div>
+      </div>
+      <div class="day-body">
+        <ul class="tl">
+          <li><span class="tt">06:30</span>北岐看日出<span class="n">起不来就跳过，直接走也不亏</span></li>
+          <li><span class="tt">10:30</span>上高速 → 雁荡山出口<span class="n">福鼎、温州方向，雁荡山互通下</span></li>
+          <li><span class="tt">13:00</span>响岭头村入住<span class="n">景区中心线上，出门就是景交车站</span></li>
+          <li><span class="tt">14:30</span>灵峰日景<span class="n">合掌峰、观音洞九叠危楼、果盒桥打卡位</span></li>
+          <li><span class="tt">18:00</span>灵峰夜景<span class="n">夫妻峰、雄鹰敛翅、犀牛望月 · 单独检票</span></li>
+          <li><span class="tt">20:30</span>回村吃夜宵<span class="n">坐夜班 1 线，不用自己开山路</span></li>
+        </ul>
+        <div class="tags">
+          <span class="tag car">190 km · 2.5h</span>
+          <span class="tag tk">B 线联票 200 元</span>
+          <span class="tag tk">景交车 3 日票 60 元</span>
+        </div>
+        <div class="note warn"><b>今天把票一次买齐</b><br>B 线联票 200 元/人 = 灵峰日夜 + 灵岩 + 大龙湫 + 方洞 + 三折瀑，3 日有效，正好覆盖 D2–D4，比单买省 85 元。</div>
+      </div>
+    </article>
+
+    <!-- D3 -->
+    <article class="day">
+      <div class="day-top">
+        <div class="badge"><em>DAY</em><b>3</b></div>
+        <div class="day-h">
+          <div class="t">核心三景 · 大龙湫 / 灵岩 / 方洞</div>
+          <div class="m">11/27 周五 · <b>全天在景区，趁人少</b></div>
+        </div>
+      </div>
+      <div class="day-body">
+        <ul class="tl">
+          <li><span class="tt">08:00</span>大龙湫景区<span class="n">2 小时 · 谷口右手进左手出，看「移步换影」</span></li>
+          <li><span class="tt">10:30</span>灵岩飞渡表演<span class="n">高空绳索表演，一般 10:30 / 15:30，节假日加场</span></li>
+          <li><span class="tt">12:00</span>回响岭头吃午饭<span class="n">景区内吃饭偏贵，回村更值</span></li>
+          <li><span class="tt">14:00</span>灵岩 · 卧云栈道<span class="n">1300 米悬空步道，沿栈道可直接走到方洞</span></li>
+          <li><span class="tt">16:00</span>方洞 · 银崖天廊<span class="n">索道单程 40 / 往返 60，不想爬就坐上去</span></li>
+        </ul>
+        <div class="tags">
+          <span class="tag">灵岩 + 方洞已合并 · 一票通</span>
+          <span class="tag money">索道往返 60 元</span>
+        </div>
+        <div class="note"><b>省一半路线的走法</b><br>灵岩上行 → 卧云栈道 → 方洞 → 索道下山，比原路返回省一大段台阶。</div>
+      </div>
+    </article>
+
+    <!-- D4 -->
+    <article class="day">
+      <div class="day-top">
+        <div class="badge"><em>DAY</em><b>4</b></div>
+        <div class="day-h">
+          <div class="t">外围景区 or 楠溪江</div>
+          <div class="m">11/28 周六 · <b>主动避开主景区人流</b></div>
+        </div>
+      </div>
+      <div class="day-body">
+        <div class="opts">
+          <div class="opt hl">
+            <span class="o-tag">推荐 · B 版</span>
+            <h4>去楠溪江，看秋色</h4>
+            <p>雁荡山 → 楠溪江 <b>60–80 km / 1–1.5 小时</b>。狮子岩竹筏、石桅岩、苍坡古村，11 月水清人少。晚上返雁荡住，第二天直接上高速。</p>
+          </div>
+          <div class="opt alt">
+            <span class="o-tag">轻松 · A 版</span>
+            <h4>显胜门 + 雁湖</h4>
+            <p>显胜门 <b>15 元</b>（《神雕侠侣》绝情谷取景地，两崖间距只有几米）＋ 雁湖 <b>15 元</b>。自驾友好，全程不挤，下午回村喝茶。</p>
+          </div>
+        </div>
+        <div class="note warn"><b>周六的雁荡山会人挤人</b><br>灵峰、大龙湫必爆满，这一天必须往外跑，正好错峰。</div>
+      </div>
+    </article>
+
+    <!-- D5 -->
+    <article class="day">
+      <div class="day-top">
+        <div class="badge"><em>DAY</em><b>5</b></div>
+        <div class="day-h">
+          <div class="t">雁荡山 → 厦门</div>
+          <div class="m">11/29 周日 · <b>约 600 km / 7–8 小时</b></div>
+        </div>
+      </div>
+      <div class="day-body">
+        <ul class="tl">
+          <li><span class="tt">07:30</span>出发返程<span class="n">想更松就 06:30 走，早段车少</span></li>
+          <li><span class="tt">10:30</span>福鼎服务区<span class="n">买点福鼎肉片、白茶带走</span></li>
+          <li><span class="tt">12:30</span>霞浦 / 宁德午饭<span class="n">海鲜面 40 元吃得很好</span></li>
+          <li><span class="tt">17:30</span>到厦门<span class="n">周日傍晚岛内略堵，预留半小时</span></li>
+        </ul>
+        <div class="tags">
+          <span class="tag car">600 km · 7–8h</span>
+          <span class="tag money">≈ 650 元油费过路</span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= TICKETS ================= -->
+  <section id="tickets">
+    <div class="sec-h"><span class="idx">03</span><h2>门票与车票</h2><span class="en">Tickets</span></div>
+    <div class="card">
+      <table class="tbl">
+        <thead><tr><th>项目</th><th>价格</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td class="name">B 线联票<span class="star">选它</span></td><td class="price">200 元</td><td class="desc">灵峰日夜 + 灵岩 + 大龙湫 + 方洞 + 三折瀑，3 日有效</td></tr>
+          <tr><td class="name">景交车</td><td class="price">60 元</td><td class="desc">3 日票 · 1 日 40 / 5 日 80</td></tr>
+          <tr><td class="name">方洞索道</td><td class="price">60 元</td><td class="desc">往返 · 单程 40，可只坐上行</td></tr>
+          <tr><td class="name">显胜门</td><td class="price">15 元</td><td class="desc">联票不含，现场买</td></tr>
+          <tr><td class="name">雁湖</td><td class="price">15 元</td><td class="desc">联票不含，现场买</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>八大景区各卖各的票</b><br>联票只覆盖核心五个。雁湖、显胜门、羊角洞在 20 公里外，景交车也不到 —— 自驾才去得方便。</div>
+    </div>
+  </section>
+
+  <!-- ================= BUDGET ================= -->
+  <section id="budget">
+    <div class="sec-h"><span class="idx">04</span><h2>预算估算</h2><span class="en">Budget</span></div>
+    <div class="card">
+      <div class="bar">
+        <div class="bar-top"><span>过路费 + 油费</span><span class="v">1,400 – 1,600</span></div>
+        <div class="track"><div class="fill" style="width:100%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="bar-top"><span>住宿 4 晚</span><span class="v">1,200 – 1,600</span></div>
+        <div class="track"><div class="fill b2" style="width:96%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="bar-top"><span>餐饮</span><span class="v">800 – 1,000</span></div>
+        <div class="track"><div class="fill b3" style="width:62%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="bar-top"><span>门票（B 线 ×2）</span><span class="v">400</span></div>
+        <div class="track"><div class="fill b4" style="width:25%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="bar-top"><span>景交车（×2）</span><span class="v">120</span></div>
+        <div class="track"><div class="fill b5" style="width:8%"></div></div>
+      </div>
+      <div class="total">
+        <div class="k">合计 · 2 人</div>
+        <div class="v">≈ 4,000 – 4,700 元</div>
+        <div class="u">不含伴手礼与临时打车</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TIPS ================= -->
+  <section id="tips">
+    <div class="sec-h"><span class="idx">05</span><h2>五件要知道的事</h2><span class="en">Notes</span></div>
+    <div class="card">
+      <div class="tip"><div class="i">1</div><div class="c"><b>天气还查不准</b>11/25 的预报要等 11/22 之后。11 月下旬乐清常年 8–18℃，早晚凉，抓绒 + 薄外套，山里风大。</div></div>
+      <div class="tip"><div class="i">2</div><div class="c"><b>秋末瀑布水量偏小</b>大龙湫别期待夏天那种气势，这季节的看点是山峰「移步换影」和灵峰夜景。</div></div>
+      <div class="tip"><div class="i">3</div><div class="c"><b>灵峰日景票不能留到晚上</b>日夜是两次检票、两张票，只有联票打包。想日夜都看，直接买 B 线。</div></div>
+      <div class="tip"><div class="i">4</div><div class="c"><b>停车怎么选</b>游客中心 800+ 车位，凭门票免费坐观光车到灵峰；景区内停车场免费，村里饭店门口会收费，别停。</div></div>
+      <div class="tip"><div class="i">5</div><div class="c"><b>山路提醒</b>雁荡山内弯多，晚上看完夜景直接坐夜班 1 线回游客中心，省心也安全。</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="mark">Xiamen · Xiapu · Yandang</span>
+    厦门 → 霞浦 → 雁荡山 →（楠溪江）→ 厦门<br>
+    票价为雁荡山官网公示价 · 行程按 2026.11.25–11.29 排<br>
+    出发前 3 天复查天气与景区开放时间
+  </footer>
+</div>
+
+</body>
+</html>
