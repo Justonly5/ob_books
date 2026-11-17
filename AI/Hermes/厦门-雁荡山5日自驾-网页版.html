@@ -236,9 +236,31 @@
     .total .v{font-size:22px}
   }
   @media print{
-    nav{display:none} body{background:#fff}
-    .card,.day{box-shadow:none; break-inside:avoid}
-    .hero{border-radius:0}
+    nav{display:none}
+    body{background:#fff; font-size:13px}
+    .wrap{padding:0 12px}
+    .hero{border-radius:0; padding-top:26px}
+    .hero-inner{padding-bottom:74px}
+    h1{font-size:24px} .sub{margin-bottom:12px}
+    .card{box-shadow:none; border-color:#e3dfd6; break-inside:avoid; margin-bottom:10px}
+    .day{box-shadow:none; border-color:#e3dfd6; break-inside:auto; margin-bottom:10px}
+    .day-top{break-after:avoid}
+    ul.tl li,.opt,.note,.tags{break-inside:avoid}
+    .day-top{padding:12px 14px 10px}
+    .day-body{padding:0 14px 14px}
+    .badge{width:42px; height:42px; border-radius:13px}
+    .badge b{font-size:17px}
+    ul.tl li{padding-bottom:9px; padding-left:72px; font-size:13.2px}
+    ul.tl li::before{left:52px; top:8px}
+    .tt{width:50px; font-size:11.5px}
+    .tt::after{display:none}
+    .tl .n{font-size:12.2px}
+    .tags{margin-top:10px} .note{margin-top:10px; padding:9px 12px}
+    .sec-h{margin:16px 2px 7px; break-after:avoid}
+    .sec-h h2{font-size:16px}
+    .opt{padding:12px 14px} .opt p{font-size:12.6px}
+    .tip{padding:10px 0} .tip .c{font-size:12.8px}
+    footer{margin-top:14px; padding:14px 12px 0; font-size:11px}
   }
 </style>
 </head>
