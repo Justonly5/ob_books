@@ -80,6 +80,48 @@
   }
   nav a:active{background:#fff}
 
+  /* ============ SPOTS (accordion) ============ */
+  .grp{
+    margin:20px 3px 9px; font-size:12px; letter-spacing:.14em; color:var(--ink-3);
+    font-weight:600; display:flex; align-items:center; gap:8px;
+  }
+  .grp::after{content:""; flex:1; height:1px; background:var(--line)}
+  details.spot{
+    border:1px solid var(--line); border-radius:15px; background:var(--card);
+    margin-bottom:9px; overflow:hidden; box-shadow:0 1px 2px rgba(16,28,34,.04);
+  }
+  details.spot summary{
+    list-style:none; cursor:pointer; padding:13px 15px;
+    display:flex; align-items:center; gap:10px; position:relative;
+  }
+  details.spot summary::-webkit-details-marker{display:none}
+  .s-txt{flex:1; min-width:0}
+  .s-name{font-size:15px; font-weight:650; letter-spacing:.01em}
+  .s-one{font-size:12.4px; color:var(--ink-3); margin-top:2px; line-height:1.5}
+  .s-dur{
+    flex:0 0 auto; font-size:11px; font-weight:700; color:var(--jade);
+    background:var(--jade-l); border-radius:7px; padding:3px 8px; white-space:nowrap;
+  }
+  .s-caret{
+    flex:0 0 auto; width:16px; height:16px; position:relative; opacity:.5; transition:transform .22s;
+  }
+  .s-caret::before,.s-caret::after{
+    content:""; position:absolute; top:7px; width:9px; height:1.6px; background:var(--ink-2); border-radius:2px;
+  }
+  .s-caret::before{left:0; transform:rotate(45deg)}
+  .s-caret::after{right:0; transform:rotate(-45deg)}
+  details.spot[open] .s-caret{transform:rotate(180deg)}
+  details.spot[open] summary{border-bottom:1px dashed var(--line); background:#f8fcfa}
+  .s-body{padding:4px 15px 15px}
+  .s-body h5{
+    margin:12px 0 5px; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--jade); font-weight:700;
+  }
+  .s-body h5:first-child{margin-top:8px}
+  .s-body ul{margin:0; padding-left:15px}
+  .s-body li{font-size:13.6px; color:var(--ink-2); line-height:1.68; margin-bottom:5px}
+  .s-body li b{color:var(--ink); font-weight:650}
+
   /* ============ SECTION ============ */
   section{scroll-margin-top:64px}
   .sec-h{display:flex; align-items:baseline; gap:10px; margin:34px 2px 12px}
@@ -259,6 +301,12 @@
     .sec-h{margin:16px 2px 7px; break-after:avoid}
     .sec-h h2{font-size:16px}
     .opt{padding:12px 14px} .opt p{font-size:12.6px}
+    details.spot{break-inside:avoid; margin-bottom:7px}
+    details.spot summary{padding:9px 12px}
+    .s-name{font-size:13.5px} .s-one{font-size:11.4px}
+    .s-body{padding:2px 12px 11px} .s-body li{font-size:12.2px; margin-bottom:3px}
+    .s-body h5{margin:8px 0 3px; font-size:9.5px}
+    .grp{break-after:avoid; margin:14px 3px 7px}
     .tip{padding:10px 0} .tip .c{font-size:12.8px}
     footer{margin-top:14px; padding:14px 12px 0; font-size:11px}
   }
@@ -288,6 +336,7 @@
   <div class="scroll">
     <a href="#route">路线</a>
     <a href="#days">逐日行程</a>
+    <a href="#spots">看点</a>
     <a href="#tickets">门票</a>
     <a href="#budget">预算</a>
     <a href="#tips">贴士</a>
@@ -465,9 +514,204 @@
     </article>
   </section>
 
+  <!-- ================= SPOTS ================= -->
+  <section id="spots">
+    <div class="sec-h"><span class="idx">03</span><h2>沿途看点</h2><span class="en">Highlights</span></div>
+
+    <div class="grp">路上 · Day 1–2</div>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">霞浦滩涂</div><div class="s-one">中国最美滩涂，11 月正是头水紫菜季</div></div><span class="s-dur">半天</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li><b>北岐</b>看日出：太阳从海面沙洲后升起，滩涂上的竹竿阵列被拉成长排剪影。</li>
+          <li><b>东壁</b>看日落：渔排、归船、紫菜架在夕光里排成横线，观景台免费。</li>
+          <li>10 月下苗、11 月采收，海面到处是紫菜竹竿和晾晒场景，是全年画面最好的时候。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>出门前查两样：<b>当天潮汐</b>和<b>日出日落时刻</b>。退潮才有滩涂纹理，涨潮拍的是水面的光。</li>
+          <li>大潮（农历初一、十五前后三天）纹理最清楚，值得把行程对上。</li>
+          <li>北岐机位在礁石和堤岸上，日前提早 40 分钟到位；石头湿滑，穿抓地的鞋。</li>
+          <li>别踩进养殖区滩涂，走栈道和观景台，渔民在干活时也不要凑太近拍。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">杨家溪</div><div class="s-one">古榕 + 枫林 + 晨雾，D2 早上可顺路</div></div><span class="s-dur">2–3 小时</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li>十几株几百年的古榕，树冠压到溪面，晨光斜射时是经典的丁达尔光画面。</li>
+          <li>11 月中下旬枫叶开始红，和绿茶园形成红绿撞色。</li>
+          <li>偶尔能遇到赶鹅的老人，是霞浦一带非常有名的民俗场景。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>离霞浦县城约 40 分钟车程，<b>7:00 前</b>到才有雾气和顺光，8 点后人陆续多起来。</li>
+          <li>门票现场买，园区不大，边走边拍 2 小时够。</li>
+          <li>如果 D2 想早点到雁荡山看灵峰日景，这里可以放弃——别为了它压缩下午的核心景区。</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="grp">雁荡山 · Day 2–3</div>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">灵峰 · 日景</div><div class="s-one">全山景致荟萃之处，雁荡三绝之首</div></div><span class="s-dur">2–3 小时</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li>峰高约 <b>270 米</b>，沿鸣玉溪而上，山腋两壁、危峰乱叠，进景区先看到"接客僧"巨岩。</li>
+          <li><b>观音洞</b>：藏在合掌峰里，洞高 113 米、深 76 米、宽 14 米，依岩建起<b>九层楼阁</b>，从山脚经 403 级石磴才到顶层大殿。雁荡山第一洞天。</li>
+          <li><b>北斗洞</b>、<b>果盒三景</b>（果盒桥是出片机位）、真际寺一带的溪涧。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>日景重点在"洞"和"峰"，别急着往上冲，进洞那几层楼才是有意思的部分。</li>
+          <li>观音洞台阶又多又陡，膝盖不好的走慢一点，中途有几处平台可歇。</li>
+          <li>下午光线斜射进洞口，拍洞内九层楼最有层次，所以把灵峰排 <b>14:30 之后</b>是合适的。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">灵峰 · 夜景</div><div class="s-one">日景耐看，夜景销魂——雁荡山的招牌</div></div><span class="s-dur">1–1.5 小时</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li>山形在月光和灯光下变成剪影，同一块石头换角度就是另一个形象：<b>夫妻峰、雄鹰敛翅、犀牛望月</b>。</li>
+          <li>讲究"移步换形"，站着不动看不出名堂，要跟着讲解一路走一路猜。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>夜景和日景是<b>两次检票、两张票</b>，日景票留不到晚上，联票才打包。</li>
+          <li>18:00 后开放（21:30 收），不用太早进，天没黑透看不出剪影效果。</li>
+          <li>跟着景区的讲解员走，或者扫牌子上的 AR/讲解码，否则大概率"看着像块石头"。</li>
+          <li>山路湿滑、灯光暗，手机手电打开；带老人小孩别走散。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">大龙湫</div><div class="s-one">单级落差 197 米，中国单级落差最高的瀑布</div></div><span class="s-dur">1.5–2 小时</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li>水从约 197 米的连云嶂直落，号称"天下第一瀑"；雨后来水量大时，下半段化成烟雾和玉屑，潭底轰响。</li>
+          <li>谷口的象形石群：剪刀峰、一帆峰、昭君出塞、啄木鸟——走过去再回头，同一块石头是不同的东西。</li>
+          <li>这就是"移步换影"，大龙湫真正好玩的地方其实在谷里这一段路。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li><b>11 月水量小</b>，瀑布常变成一条细线，甚至有断流的日子。期待值放低，看点放在象形峰上。</li>
+          <li>雨后 1–2 天最壮观，出发前看一眼当地降雨。</li>
+          <li>进谷右手边进去、左手边出来，不要原路返回。</li>
+          <li>谷里风口，风大水凉，比外面低好几度，加一件外套。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">灵岩 + 卧云栈道</div><div class="s-one">天柱展旗对峙，1300 米悬空栈道连方洞</div></div><span class="s-dur">2–3 小时</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li><b>天柱峰、展旗峰</b>两崖对峙如门，谷底是灵岩寺，雁荡三绝之一。</li>
+          <li><b>灵岩飞渡</b>：人在两峰之间的绳索上表演，一边"采药"一边翻跟头，是老一代雁荡人的营生。</li>
+          <li><b>卧云栈道</b>：长约 1300 米的悬崖栈道，走在半空中，一路通到方洞。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>飞渡场次：<b>周五至周日 10:30 / 13:30 / 15:30；周一至周四 10:30 / 15:30</b>。你 D3 是周五，三场都能赶。</li>
+          <li>提前 10 分钟到灵岩寺前空地占位，抬头看，角度别贴太近。</li>
+          <li>栈道单向、路窄，恐高的靠内侧走，别在窄段停下来拍照。</li>
+          <li>灵岩走到方洞约 40–60 分钟，是全程最值得走的一段，别坐车绕。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">方洞</div><div class="s-one">银崖天廊，绝壁上凿出来的栈道</div></div><span class="s-dur">1–1.5 小时</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li>洞口百余米栈道沿天然岩石开凿，叫"<b>银崖天廊</b>"，脚下就是空谷。</li>
+          <li>洞内三处滴泉水，积水可饮；关刀洞、云天桥、倒挂金钟、聚仙阁。</li>
+          <li>和灵岩已合并成一个景区，一票通，含卧云栈道。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>索道<b>往返 60 元、单程 40 元</b>。建议坐上行、走下行——反过来的话膝盖会很吃力。</li>
+          <li>洞里有两家洞穴咖啡馆，坐下来喝杯东西看山谷是方洞的隐藏玩法。</li>
+          <li>栈道有栏杆但外侧悬空，自拍别贴边，风大时会晃。</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="grp">外围 & 支线 · Day 4</div>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">显胜门</div><div class="s-one">两崖夹出一线天，《神雕侠侣》绝情谷</div></div><span class="s-dur">1–2 小时</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li>两座巨崖对峙成一道"门"，间距只有几米，抬头是一线天，站在门口有种被山夹住的感觉。</li>
+          <li>电视剧《神雕侠侣》的绝情谷就是在这一带取的景。</li>
+          <li>附近还有南阁村的明代牌坊群，顺路可以看。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>开车到门口，步行 20 分钟就到，全程不累，适合当休整日。</li>
+          <li>门票 15 元，游客极少，是整个雁荡山最清净的地方之一。</li>
+          <li>联票不含这里，需要单独买。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">雁湖</div><div class="s-one">山顶的湖，"雁荡"这个名字的由来</div></div><span class="s-dur">2–3 小时</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li>山脊顶上的湖，芦苇丛生、结草为荡，南归秋雁多在此栖宿——雁荡山的名字就从这儿来。</li>
+          <li>11 月芦苇金黄，风一过成片倒伏，山顶还能望到东海方向。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>海拔近千米，盘山路窄、弯急，自驾会车要慢，雾天更要注意。</li>
+          <li>爬山加环湖约 2 小时，山上没有补给，水和干粮自己带够。</li>
+          <li>门票 15 元，联票不含；人少，适合不想挤的那一天。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spot">
+      <summary><div class="s-txt"><div class="s-name">楠溪江</div><div class="s-one">三十六湾七十二滩，配千年耕读古村</div></div><span class="s-dur">半天–1 天</span><span class="s-caret"></span></summary>
+      <div class="s-body">
+        <h5>看什么</h5>
+        <ul>
+          <li><b>狮子岩</b>竹筏漂流：水清见底，两岸是滩林和村落，1 小时左右的慢节奏。</li>
+          <li><b>石桅岩</b>：一块巨岩从溪谷里拔地而起，是楠溪江的标志画面。</li>
+          <li><b>苍坡古村</b>：五代始建、南宋重新按"文房四宝"布局，背靠笔架山、面朝楠溪江，一千多年仍是李姓聚居。</li>
+          <li><b>芙蓉古村</b>、<b>丽水街</b>：前者是完整的寨墙古村，后者是沿水而建的老街。</li>
+        </ul>
+        <h5>怎么玩</h5>
+        <ul>
+          <li>11 月银杏、红柿正当时，古村里的老银杏是免费打卡点。</li>
+          <li>竹筏选狮子岩—渡头段最经典，水温已经偏凉，别下水玩。</li>
+          <li>古村门票各自单买，苍坡+芙蓉买联票更划算，现场问一下。</li>
+          <li>下午光线柔和，古村拍照避开正午；傍晚回雁荡住，第二天直接上高速。</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
   <!-- ================= TICKETS ================= -->
   <section id="tickets">
-    <div class="sec-h"><span class="idx">03</span><h2>门票与车票</h2><span class="en">Tickets</span></div>
+    <div class="sec-h"><span class="idx">04</span><h2>门票与车票</h2><span class="en">Tickets</span></div>
     <div class="card">
       <table class="tbl">
         <thead><tr><th>项目</th><th>价格</th><th>说明</th></tr></thead>
@@ -485,7 +729,7 @@
 
   <!-- ================= BUDGET ================= -->
   <section id="budget">
-    <div class="sec-h"><span class="idx">04</span><h2>预算估算</h2><span class="en">Budget</span></div>
+    <div class="sec-h"><span class="idx">05</span><h2>预算估算</h2><span class="en">Budget</span></div>
     <div class="card">
       <div class="bar">
         <div class="bar-top"><span>过路费 + 油费</span><span class="v">1,400 – 1,600</span></div>
@@ -517,7 +761,7 @@
 
   <!-- ================= TIPS ================= -->
   <section id="tips">
-    <div class="sec-h"><span class="idx">05</span><h2>五件要知道的事</h2><span class="en">Notes</span></div>
+    <div class="sec-h"><span class="idx">06</span><h2>五件要知道的事</h2><span class="en">Notes</span></div>
     <div class="card">
       <div class="tip"><div class="i">1</div><div class="c"><b>天气还查不准</b>11/25 的预报要等 11/22 之后。11 月下旬乐清常年 8–18℃，早晚凉，抓绒 + 薄外套，山里风大。</div></div>
       <div class="tip"><div class="i">2</div><div class="c"><b>秋末瀑布水量偏小</b>大龙湫别期待夏天那种气势，这季节的看点是山峰「移步换影」和灵峰夜景。</div></div>
